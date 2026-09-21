@@ -7,12 +7,84 @@ export default [
       { component: './404' },
     ],
   },
+
+  // --- Người lao động ---
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
+    path: '/workers',
+    name: 'worker',
+    icon: 'idcard',
+    access: 'listWorker',
+    component: './workers',
   },
+  {
+    path: '/workers/create',
+    name: 'workerCreate',
+    access: 'createWorker',
+    hideInMenu: true,
+    component: './workers/Form',
+  },
+  {
+    path: '/workers/:id/edit',
+    name: 'workerEdit',
+    access: 'updateWorker',
+    hideInMenu: true,
+    component: './workers/Form',
+  },
+  {
+    path: '/workers/:id',
+    name: 'workerDetail',
+    access: 'listWorker',
+    hideInMenu: true,
+    component: './workers/Detail',
+  },
+
+  // --- Người đại diện ---
+  {
+    path: '/agents',
+    name: 'agent',
+    icon: 'solution',
+    access: 'listAgent',
+    component: './agents',
+  },
+  {
+    path: '/agents/create',
+    name: 'agentCreate',
+    access: 'createAgent',
+    hideInMenu: true,
+    component: './agents/Form',
+  },
+  {
+    path: '/agents/:id/edit',
+    name: 'agentEdit',
+    access: 'updateAgent',
+    hideInMenu: true,
+    component: './agents/Form',
+  },
+  {
+    path: '/agents/:id',
+    name: 'agentDetail',
+    access: 'listAgent',
+    hideInMenu: true,
+    component: './agents/Detail',
+  },
+
+  // --- Thủ tục Nenkin ---
+  {
+    path: '/nenkin',
+    name: 'nenkin',
+    icon: 'fileProtect',
+    access: 'listNenkinService',
+    component: './nenkin',
+  },
+  {
+    path: '/nenkin/request/:serviceType',
+    name: 'nenkinRequest',
+    access: 'createNenkinService',
+    hideInMenu: true,
+    component: './nenkin/Request',
+  },
+
+  // --- Thành viên & phân quyền ---
   {
     path: '/users',
     name: 'user',
@@ -47,6 +119,7 @@ export default [
       { component: './404' },
     ],
   },
+
   {
     hideInMenu: true,
     name: 'account',
@@ -55,8 +128,15 @@ export default [
     component: './account',
   },
   {
+    path: '/welcome',
+    name: 'welcome',
+    icon: 'smile',
+    hideInMenu: true,
+    component: './Welcome',
+  },
+  {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/workers',
   },
   {
     component: './404',

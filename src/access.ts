@@ -34,6 +34,24 @@ export default function access(
     deleteUser: c(['DELETE_USER']),
     banUser: c(['BANED_USER']),
 
+    menuWorker: c(['GET_WORKER']),
+    listWorker: c(['GET_WORKER']),
+    createWorker: c(['CREATE_WORKER']),
+    updateWorker: c(['UPDATE_WORKER']),
+    deleteWorker: c(['DELETE_WORKER']),
+    updateNenkinResult: c(['UPDATE_NENKIN_RESULT']),
+
+    menuAgent: c(['GET_AGENT']),
+    listAgent: c(['GET_AGENT']),
+    createAgent: c(['CREATE_AGENT']),
+    updateAgent: c(['UPDATE_AGENT']),
+    deleteAgent: c(['DELETE_AGENT']),
+
+    menuNenkin: c(['GET_NENKIN_SERVICE']),
+    listNenkinService: c(['GET_NENKIN_SERVICE']),
+    createNenkinService: c(['CREATE_NENKIN_SERVICE']),
+    deleteNenkinService: c(['DELETE_NENKIN_SERVICE']),
+
     listRole: c(['GET_ROLES']),
     createRole: c(['CREATE_ROLES']),
     updateRole: c(['UPDATE_ROLES']),
