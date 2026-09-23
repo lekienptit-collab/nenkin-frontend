@@ -1,18 +1,24 @@
+import ExceptionCard from '@/components/ExceptionCard';
+import { HomeOutlined, LeftOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Result } from 'antd';
+import { Button, Space } from 'antd';
 import React from 'react';
 
 const NoAccessPage: React.FC = () => (
-  <Result
-    status="403"
-    title="403"
-    subTitle="Xin lỗi, bạn không có quyền truy cập trang này."
-    extra={
-      <Button type="primary" onClick={() => history.push('/')}>
+  <ExceptionCard
+    code="403"
+    title="Bạn không có quyền vào trang này"
+    description="Tài khoản của bạn chưa được cấp quyền cho chức năng này. Liên hệ quản trị viên nếu bạn cần sử dụng."
+  >
+    <Space wrap>
+      <Button type="primary" icon={<HomeOutlined />} onClick={() => history.push('/')}>
         Về trang chủ
       </Button>
-    }
-  />
+      <Button icon={<LeftOutlined />} onClick={() => history.back()}>
+        Quay lại
+      </Button>
+    </Space>
+  </ExceptionCard>
 );
 
 export default NoAccessPage;

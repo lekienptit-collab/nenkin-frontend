@@ -1,6 +1,7 @@
 import access from '@/access';
 import { addRole, removeRole, role as queryRoles, updateRole } from '@/services/nenkin/role';
 import { getErrorCode } from '@/utils/error';
+import { showTotal } from '@/utils/table';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -92,14 +93,21 @@ const RoleList: React.FC = () => {
   });
 
   return (
-    <PageContainer title="Quản lý quyền">
+    <PageContainer
+      title="Quản lý quyền"
+      content="Nhóm quyền theo cấp bậc; mỗi nhóm được phân quyền chi tiết tới từng chức năng."
+    >
       <ProTable<API.RoleListItem, API.RoleQueryParams>
         headerTitle="Danh sách quyền"
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
         search={{ labelWidth: 120 }}
-        pagination={{ pageSize: 20, showSizeChanger: true }}
+        pagination={{
+          pageSize: 20,
+          showSizeChanger: true,
+          showTotal: showTotal('quyền'),
+        }}
         toolBarRender={() => [
           checkAccess.createRole && (
             <Button

@@ -1,25 +1,238 @@
-.container {
+/* Trang dang nhap: chia doi - ben trai gioi thieu, ben phai o nhap tai khoan. */
+
+.page {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: auto;
-  background: #f0f2f5;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #f4f6fb;
 }
 
-.content {
+/* ------------------------------------------------------- Panel thuong hieu */
+
+.brandSide {
+  position: relative;
+  display: flex;
+  flex: 1.05;
+  align-items: center;
+  padding: 56px 64px;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(145deg, #1e3a8a 0%, #2563eb 42%, #4f46e5 76%, #0ea5e9 130%);
+
+  /* Luoi ke mo tao chieu sau cho nen. */
+  &::before {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(120% 100% at 30% 20%, #000 35%, transparent 75%);
+    content: '';
+  }
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+}
+
+.blobOne {
+  top: -120px;
+  right: -60px;
+  width: 360px;
+  height: 360px;
+  background: rgba(56, 189, 248, 0.55);
+}
+
+.blobTwo {
+  bottom: -140px;
+  left: -80px;
+  width: 400px;
+  height: 400px;
+  background: rgba(129, 140, 248, 0.5);
+}
+
+.brandInner {
+  position: relative;
+  z-index: 1;
+  max-width: 540px;
+}
+
+.brandLogo {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 52px;
+}
+
+.brandName {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.brandTag {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+}
+
+.brandTitle {
+  margin: 0 0 30px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+
+  span {
+    color: #bfdbfe;
+  }
+}
+
+.highlights {
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    line-height: 1.6;
+
+    :global(.anticon) {
+      margin-top: 4px;
+      color: #a5f3fc;
+      font-size: 16px;
+    }
+  }
+}
+
+.brandFooter {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 52px;
+  padding-top: 22px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* ------------------------------------------------------- O nhap tai khoan */
+
+.formSide {
+  position: relative;
+  display: flex;
   flex: 1;
-  padding: 32px 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: radial-gradient(900px 500px at 70% -10%, #e9f0ff 0%, #f4f6fb 62%);
 }
 
-@media (min-width: 768px) {
-  .container {
-    background-image: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg');
-    background-repeat: no-repeat;
-    background-position: center 110px;
-    background-size: 100%;
+.card {
+  width: 100%;
+  max-width: 424px;
+  padding: 40px 36px 24px;
+  background: #fff;
+  border: 1px solid rgba(15, 28, 63, 0.05);
+  border-radius: 22px;
+  box-shadow: 0 2px 4px rgba(15, 28, 63, 0.03), 0 24px 56px -32px rgba(15, 28, 63, 0.35);
+
+  /* Go bo kich thuoc co dinh cua LoginForm de vua khung the o tren. */
+  :global {
+    .ant-pro-form-login-container {
+      min-height: auto;
+      padding-block: 0;
+    }
+
+    .ant-pro-form-login-top {
+      padding-block-start: 0;
+    }
+
+    .ant-pro-form-login-header {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      height: auto;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .ant-pro-form-login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin: 0;
+    }
+
+    .ant-pro-form-login-title {
+      margin: 14px 0 0;
+      color: #0f1c3f;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.02em;
+    }
+
+    .ant-pro-form-login-desc {
+      margin-bottom: 4px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .ant-pro-form-login-main {
+      width: 100%;
+      min-width: auto;
+      max-width: 100%;
+      margin-top: 28px;
+    }
+
+    .ant-input-affix-wrapper-lg,
+    .ant-input-lg {
+      padding-block: 9px;
+      border-radius: 12px;
+    }
+
+    .ant-input-affix-wrapper .anticon {
+      color: #94a3b8;
+    }
+
+    .ant-btn-lg {
+      height: 46px;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 12px;
+    }
+  }
+}
+
+.copyright {
+  margin-top: 26px;
+  color: #94a3b8;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ------------------------------------------------------- Man hinh hep */
+
+@media (max-width: 991px) {
+  .brandSide {
+    display: none;
   }
 
-  .content {
-    padding: 32px 0 24px;
+  .formSide {
+    padding: 28px 16px;
+  }
+
+  .card {
+    padding: 32px 24px 20px;
   }
 }

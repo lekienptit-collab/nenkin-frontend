@@ -2,9 +2,10 @@ import { updateMe, updatePasswordMe } from '@/services/nenkin/user';
 import { getErrorCode } from '@/utils/error';
 import { logoutToken } from '@/utils/token';
 import { PageContainer, ProForm, ProFormDatePicker, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
-import { history, useModel } from '@umijs/max';
-import { Card, Descriptions, message, Tabs, Tag } from 'antd';
+import { useModel } from '@umijs/max';
+import { Card, message, Tabs } from 'antd';
 import React from 'react';
+import styles from './index.less';
 
 const Account: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -49,22 +50,36 @@ const Account: React.FC = () => {
 
   return (
     <PageContainer title="Thông tin cá nhân">
-      <Card style={{ marginBottom: 24 }}>
-        <Descriptions column={{ xs: 1, sm: 2 }}>
-          <Descriptions.Item label="Tên đăng nhập">{currentUser?.username}</Descriptions.Item>
-          <Descriptions.Item label="Vai trò">
-            <Tag color="blue">{currentUser?.roleName || '-'}</Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label="Trạng thái">
-            {currentUser?.isActive ? 'Đang hoạt động' : 'Đã khoá'}
-          </Descriptions.Item>
-          <Descriptions.Item label="Số quyền">
-            {currentUser?.permissions?.includes('all')
-              ? 'Toàn quyền'
-              : currentUser?.permissions?.length || 0}
-          </Descriptions.Item>
-        </Descriptions>
-      </Card>
+      <div className={styles.profile}>
+        <span className={styles.blob} />
+        <div className={styles.profileMain}>
+          <div className={styles.avatar}>
+            {(currentUser?.fullname || currentUser?.username || 'N').charAt(0).toUpperCase()}
+          </div>
+          <div className={styles.profileText}>
+            <div className={styles.name}>
+              {currentUser?.fullname || currentUser?.username || '-'}
+            </div>
+            <div className={styles.sub}>
+              @{currentUser?.username} · {currentUser?.email || 'chưa có email'}
+            </div>
+            <div className={styles.metaRow}>
+              <span className={styles.metaTag}>
+                Vai trò: {currentUser?.roleName || 'chưa gán'}
+              </span>
+              <span className={styles.metaTag}>
+                Số quyền:{' '}
+                {currentUser?.permissions?.includes('all')
+                  ? 'Toàn quyền'
+                  : currentUser?.permissions?.length || 0}
+              </span>
+              <span className={styles.metaTag}>
+                {currentUser?.isActive ? 'Đang hoạt động' : 'Đã khoá'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <Card>
         <Tabs

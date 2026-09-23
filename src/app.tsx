@@ -66,8 +66,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     rightContentRender: () => <RightContent />,
     footerRender: () => <Footer />,
     disableContentMargin: false,
+    // Chu chim ten nguoi dang dung: giu de chong chup man hinh, nhung lam that
+    // nhat de khong lam roi noi dung.
     waterMarkProps:
-      APP_NAME !== 'false' ? { content: initialState?.currentUser?.username } : undefined,
+      APP_NAME !== 'false'
+        ? {
+            content: initialState?.currentUser?.username,
+            fontColor: 'rgba(15, 28, 63, 0.045)',
+            fontSize: 14,
+            gapX: 160,
+            gapY: 130,
+          }
+        : undefined,
     onPageChange: () => {
       const { pathname } = history.location;
       if (!initialState?.currentUser && !isPublicPath(pathname)) {

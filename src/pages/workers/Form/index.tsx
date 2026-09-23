@@ -141,11 +141,12 @@ const WorkerForm: React.FC = () => {
             </Col>
 
             <Col xs={0} lg={6}>
-              <Affix offsetTop={24}>
-                <Card size="small">
+              {/* Header dang o che do fixed (cao 56px) nen phai chua khoang trong. */}
+              <Affix offsetTop={80}>
+                <Card size="small" title="Nội dung biểu mẫu">
                   <Anchor
                     affix={false}
-                    offsetTop={80}
+                    offsetTop={100}
                     items={WORKER_SECTIONS.map((s) => ({
                       key: s.key,
                       href: `#${s.key}`,

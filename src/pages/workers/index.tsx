@@ -6,14 +6,16 @@ import {
   workers as queryWorkers,
 } from '@/services/nenkin/worker';
 import { getErrorCode } from '@/utils/error';
+import { showTotal } from '@/utils/table';
 import { PlusOutlined, TagsOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import { Button, message, Modal, Space, Typography } from 'antd';
+import { Button, message, Modal, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import { configColumns } from './columns';
 import NenkinResultModal from './components/NenkinResultModal';
+import styles from './index.less';
 
 const ERROR_MESSAGES: Record<string, string> = {
   WORKER_NOT_FOUND: 'Không tìm thấy người lao động.',
@@ -84,14 +86,21 @@ const WorkerList: React.FC = () => {
   });
 
   return (
-    <PageContainer title="Người lao động">
+    <PageContainer
+      title="Người lao động"
+      content="Hồ sơ người lao động cùng tình trạng giấy tờ và kết quả của từng lần thủ tục Nenkin."
+    >
       <ProTable<API.WorkerListItem, API.WorkerQueryParams>
         headerTitle="Danh sách người lao động"
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
-        search={{ labelWidth: 150 }}
-        pagination={{ pageSize: 20, showSizeChanger: true }}
+        search={{ labelWidth: 180 }}
+        pagination={{
+          pageSize: 20,
+          showSizeChanger: true,
+          showTotal: showTotal('người lao động'),
+        }}
         scroll={{ x: 1200 }}
         params={quickFilter.params}
         onRow={(record) => ({
@@ -104,21 +113,32 @@ const WorkerList: React.FC = () => {
           style: { cursor: 'pointer' },
         })}
         tableExtraRender={() => (
-          <div style={{ marginBottom: 16 }}>
+          <div className={styles.quickBar}>
+            <span className={styles.quickLabel}>
+              <TagsOutlined /> Tìm nhanh
+            </span>
             <Space size={[8, 8]} wrap>
-              <Typography.Text type="secondary">
-                <TagsOutlined /> Tìm nhanh
-              </Typography.Text>
               {WORKER_QUICK_FILTERS.map((f) => (
                 <Button
                   key={f.key}
                   size="small"
+                  shape="round"
+                  className={styles.quickChip}
                   type={quickFilter.key === f.key ? 'primary' : 'default'}
                   onClick={() => toggleQuickFilter(f.key, f.params)}
                 >
                   {f.label}
                 </Button>
               ))}
+              {quickFilter.key && (
+                <Button
+                  size="small"
+                  type="link"
+                  onClick={() => setQuickFilter({ params: {} })}
+                >
+                  Bỏ lọc
+                </Button>
+              )}
             </Space>
           </div>
         )}

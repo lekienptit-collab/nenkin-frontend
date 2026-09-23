@@ -7,6 +7,7 @@ import {
   users as queryUsers,
 } from '@/services/nenkin/user';
 import { getErrorCode } from '@/utils/error';
+import { showTotal } from '@/utils/table';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -108,14 +109,21 @@ const UserList: React.FC = () => {
   });
 
   return (
-    <PageContainer title="Quản lý thành viên">
+    <PageContainer
+      title="Quản lý thành viên"
+      content="Tài khoản nhân viên đang sử dụng hệ thống và vai trò được gán cho từng người."
+    >
       <ProTable<API.UserListItem, API.UserQueryParams>
         headerTitle="Danh sách thành viên"
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
         search={{ labelWidth: 120 }}
-        pagination={{ pageSize: 20, showSizeChanger: true }}
+        pagination={{
+          pageSize: 20,
+          showSizeChanger: true,
+          showTotal: showTotal('thành viên'),
+        }}
         toolBarRender={() => [
           checkAccess.createUser && (
             <Button

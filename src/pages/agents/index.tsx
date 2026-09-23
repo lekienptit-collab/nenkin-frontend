@@ -1,6 +1,7 @@
 import access from '@/access';
 import { agents as queryAgents, deleteAgents } from '@/services/nenkin/agent';
 import { getErrorCode } from '@/utils/error';
+import { showTotal } from '@/utils/table';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -46,14 +47,21 @@ const AgentList: React.FC = () => {
   const columns = configColumns({ onDelete: handleRemove, checkAccess });
 
   return (
-    <PageContainer title="Người đại diện">
+    <PageContainer
+      title="Người đại diện"
+      content="Những người được uỷ quyền đứng tên trên hồ sơ Nenkin của người lao động."
+    >
       <ProTable<API.AgentListItem, API.AgentQueryParams>
         headerTitle="Danh sách người đại diện"
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
-        search={{ labelWidth: 150 }}
-        pagination={{ pageSize: 20, showSizeChanger: true }}
+        search={{ labelWidth: 180 }}
+        pagination={{
+          pageSize: 20,
+          showSizeChanger: true,
+          showTotal: showTotal('người đại diện'),
+        }}
         toolBarRender={() => [
           checkAccess.createAgent && (
             <Button

@@ -1,6 +1,6 @@
 import { outLogin } from '@/services/nenkin/auth';
 import { getToken, logoutToken } from '@/utils/token';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import { Avatar, Spin } from 'antd';
 import type { MenuProps } from 'antd';
@@ -70,13 +70,14 @@ const AvatarDropdown: React.FC = () => {
     <HeaderDropdown menu={{ items: menuItems, onClick: onMenuClick }}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar
-          size="small"
+          size={32}
           className={styles.avatar}
           src={currentUser.avatar}
           icon={!currentUser.avatar ? <UserOutlined /> : undefined}
           alt="avatar"
         />
-        <span>{currentUser.fullname || currentUser.username}</span>
+        <span className={styles.name}>{currentUser.fullname || currentUser.username}</span>
+        <DownOutlined className={styles.caret} />
       </span>
     </HeaderDropdown>
   );

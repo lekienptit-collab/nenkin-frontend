@@ -6,9 +6,9 @@ const Footer: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <DefaultFooter
       className={className}
-      copyright={`${currentYear} Nenkin`}
+      copyright={`${currentYear} Nenkin · Hệ thống quản trị hồ sơ bảo hiểm hưu trí Nhật Bản`}
       links={[]}
-      style={{ background: 'none' }}
+      style={{ background: 'none', paddingBlock: 20, fontSize: 13 }}
     />
   );
 };

@@ -2,49 +2,66 @@
   :global(.anticon) {
     margin-right: 8px;
   }
+
   :global(.ant-dropdown-menu-item) {
-    min-width: 160px;
+    min-width: 180px;
   }
 }
 
 .right {
   display: flex;
-  float: right;
-  height: 48px;
+  gap: 4px;
+  align-items: center;
+  height: 56px;
   margin-left: auto;
-  overflow: hidden;
 
   .action {
     display: flex;
     align-items: center;
-    height: 48px;
-    padding: 0 12px;
+    height: 40px;
+    padding: 0 12px 0 6px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: background 0.2s ease;
 
     > span {
       vertical-align: middle;
     }
 
     &:hover {
-      background: rgba(0, 0, 0, 0.025);
+      background: rgba(37, 99, 235, 0.08);
     }
   }
 
   .account {
     .avatar {
-      margin-right: 8px;
-      color: #1890ff;
-      vertical-align: top;
-      background: rgba(255, 255, 255, 0.85);
+      margin-right: 9px;
+      color: #fff;
+      vertical-align: middle;
+      background: linear-gradient(135deg, #60a5fa, #4f46e5);
+      box-shadow: 0 6px 14px -8px rgba(37, 99, 235, 0.95);
+    }
+
+    .name {
+      max-width: 180px;
+      overflow: hidden;
+      color: #1f2a44;
+      font-weight: 500;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .caret {
+      margin-left: 8px;
+      color: #94a3b8;
+      font-size: 10px;
     }
   }
 }
 
+/* Giu lai bien the cho layout mix - header nen sang nen hover cung sang. */
 .dark {
-  .action {
-    &:hover {
-      background: #252a3d;
-    }
+  .action:hover {
+    background: rgba(37, 99, 235, 0.08);
   }
 }

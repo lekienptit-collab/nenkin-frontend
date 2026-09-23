@@ -1,0 +1,307 @@
+/* Trang Tong quan: banner chao mung + loi tat + quy trinh + tai khoan. */
+
+/* ------------------------------------------------------------- Banner */
+
+.hero {
+  position: relative;
+  margin-bottom: 24px;
+  padding: 32px 36px;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 45%, #4f46e5 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 44px -28px rgba(37, 99, 235, 0.85);
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(110% 100% at 20% 10%, #000 30%, transparent 78%);
+    content: '';
+  }
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.blobOne {
+  top: -110px;
+  right: 120px;
+  width: 280px;
+  height: 280px;
+  background: rgba(56, 189, 248, 0.5);
+}
+
+.blobTwo {
+  right: -90px;
+  bottom: -130px;
+  width: 300px;
+  height: 300px;
+  background: rgba(165, 180, 252, 0.45);
+}
+
+.heroMain {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.heroText {
+  max-width: 640px;
+}
+
+.heroDate {
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin: 0 0 8px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 28px !important;
+  letter-spacing: -0.02em;
+}
+
+.heroDesc {
+  margin-bottom: 18px !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 15px;
+}
+
+.heroTag {
+  padding: 3px 12px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 99px;
+}
+
+.heroSide {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.heroMark {
+  filter: drop-shadow(0 16px 26px rgba(8, 20, 60, 0.45));
+}
+
+.heroButton {
+  color: #1d4ed8 !important;
+  font-weight: 600;
+  background: #fff !important;
+  border: none !important;
+  box-shadow: 0 10px 24px -12px rgba(8, 20, 60, 0.8) !important;
+
+  &:hover {
+    color: #1e40af !important;
+    background: #f1f5ff !important;
+  }
+}
+
+/* ------------------------------------------------------------- Loi tat */
+
+.sectionTitle {
+  margin-bottom: 12px;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.shortcutRow {
+  margin-bottom: 24px;
+}
+
+.shortcut {
+  height: 100%;
+  cursor: pointer;
+
+  :global(.ant-card-body) {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  &:hover {
+    .shortcutArrow {
+      color: #2563eb;
+      transform: translateX(3px);
+      opacity: 1;
+    }
+  }
+}
+
+.shortcutIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 13px;
+}
+
+.shortcutBody {
+  min-width: 0;
+}
+
+.shortcutTitle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+  color: #0f1c3f;
+  font-weight: 650;
+  font-size: 15px;
+}
+
+.shortcutArrow {
+  color: #cbd5e1;
+  font-size: 13px;
+  transition: all 0.25s ease;
+  opacity: 0.8;
+}
+
+.shortcutDesc {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.toneBlue {
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+  box-shadow: 0 10px 20px -12px rgba(37, 99, 235, 0.9);
+}
+
+.toneViolet {
+  background: linear-gradient(135deg, #a78bfa, #6d28d9);
+  box-shadow: 0 10px 20px -12px rgba(109, 40, 217, 0.9);
+}
+
+.toneAmber {
+  background: linear-gradient(135deg, #fbbf24, #ea580c);
+  box-shadow: 0 10px 20px -12px rgba(234, 88, 12, 0.9);
+}
+
+.toneTeal {
+  background: linear-gradient(135deg, #5eead4, #0d9488);
+  box-shadow: 0 10px 20px -12px rgba(13, 148, 136, 0.9);
+}
+
+.toneRose {
+  background: linear-gradient(135deg, #fda4af, #e11d48);
+  box-shadow: 0 10px 20px -12px rgba(225, 29, 72, 0.9);
+}
+
+/* ------------------------------------------------------------- Panel duoi */
+
+.panel {
+  height: 100%;
+}
+
+.steps {
+  :global(.ant-steps-item-title) {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  :global(.ant-steps-item-description) {
+    font-size: 13px;
+    padding-bottom: 18px !important;
+  }
+}
+
+.account {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding-bottom: 18px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #eef1f7;
+}
+
+.accountAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  background: linear-gradient(135deg, #60a5fa, #4f46e5);
+  border-radius: 16px;
+  box-shadow: 0 12px 22px -14px rgba(37, 99, 235, 0.95);
+}
+
+.accountName {
+  color: #0f1c3f;
+  font-weight: 650;
+  font-size: 16px;
+}
+
+.accountList {
+  margin: 0 0 20px;
+  padding: 0;
+
+  li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 0;
+    color: #475569;
+    font-size: 14px;
+    border-bottom: 1px dashed #eef1f7;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    :global(.anticon) {
+      color: #94a3b8;
+    }
+  }
+}
+
+/* ------------------------------------------------------------- Man hinh hep */
+
+@media (max-width: 767px) {
+  .hero {
+    padding: 24px 20px;
+  }
+
+  .heroMain {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .heroTitle {
+    font-size: 23px !important;
+  }
+
+  .heroSide {
+    flex-direction: row;
+    width: 100%;
+  }
+}

@@ -3,6 +3,7 @@ import { defineConfig } from '@umijs/max';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+import { antdTheme, brand } from './theme';
 
 const { REACT_APP_API, REACT_APP_ENV = 'dev', REACT_APP_NAME } = process.env;
 
@@ -36,9 +37,30 @@ export default defineConfig({
     antd: true,
     baseNavigator: false,
   },
-  antd: {},
+  antd: {
+    theme: antdTheme,
+  },
   request: {},
   access: {},
+  title: 'Nenkin - Hệ thống quản trị',
+  favicons: ['/favicon.svg'],
+  metas: [
+    { name: 'theme-color', content: brand.primary },
+    {
+      name: 'description',
+      content: 'Hệ thống quản trị hồ sơ Nenkin: người lao động, người đại diện và thủ tục hoàn tiền bảo hiểm hưu trí Nhật Bản.',
+    },
+  ],
+  // Font chu cho toan he thong; neu may chu khong ra duoc internet thi tu dong
+  // roi ve font he thong khai bao trong `fontFamily` (config/theme.ts).
+  links: [
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap',
+    },
+  ],
   headScripts: [{ src: '/scripts/loading.js', async: true }],
   presets: ['umi-presets-pro'],
   mfsu: {

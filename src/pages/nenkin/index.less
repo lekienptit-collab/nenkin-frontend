@@ -1,0 +1,201 @@
+/* Trang Thu tuc Nenkin: 2 the lon cho 2 lan thu tuc. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e8ecf4;
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(15, 28, 63, 0.04), 0 8px 24px -16px rgba(15, 28, 63, 0.24);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 18px 40px -24px rgba(15, 28, 63, 0.32);
+    transform: translateY(-2px);
+  }
+}
+
+/* --------------------------------------------------------------- Dau the */
+
+.head {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 22px 24px;
+  overflow: hidden;
+  color: #fff;
+}
+
+.headBlob {
+  position: absolute;
+  top: -70px;
+  right: -40px;
+  width: 190px;
+  height: 190px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+}
+
+.toneBlue {
+  background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+}
+
+.toneViolet {
+  background: linear-gradient(120deg, #4c1d95 0%, #6d28d9 55%, #8b5cf6 100%);
+}
+
+.headNumber {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-weight: 700;
+  font-size: 22px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+}
+
+.headText {
+  position: relative;
+  min-width: 0;
+}
+
+.headTitle {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.headDesc {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------- Than the */
+
+.body {
+  flex: 1;
+  padding: 20px 24px 8px;
+}
+
+.listLabel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.count {
+  padding: 1px 8px;
+  color: #2563eb;
+  font-size: 12px;
+  letter-spacing: 0;
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: 99px;
+}
+
+.papers {
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px dashed #eef1f7;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.paperIndex {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 12px;
+  background: #f1f5fb;
+  border-radius: 7px;
+}
+
+.paperIcon {
+  flex-shrink: 0;
+  color: #d4380d;
+  font-size: 16px;
+}
+
+.paperName {
+  flex: 1;
+  min-width: 0;
+  color: #1f2a44;
+  font-size: 14px;
+}
+
+.paperCode {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  color: #7a869a;
+  font-size: 11.5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: #f7f9fd;
+  border: 1px solid #eef1f7;
+  border-radius: 6px;
+}
+
+/* --------------------------------------------------------------- Chan the */
+
+.footer {
+  padding: 16px 24px 22px;
+}
+
+/* Nut cua the "lan 2" dung dung tong mau tim nhu dau the.
+   Dung !important de de len gradient xanh mac dinh khai bao o global.less. */
+.buttonViolet {
+  &:global(.ant-btn-primary):not(:disabled) {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 55%, #4c1d95 100%) !important;
+    box-shadow: 0 6px 16px -8px rgba(109, 40, 217, 0.85) !important;
+
+    &:hover {
+      box-shadow: 0 10px 22px -10px rgba(109, 40, 217, 0.95) !important;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .head {
+    padding: 18px;
+  }
+
+  .body {
+    padding: 18px 18px 6px;
+  }
+
+  .footer {
+    padding: 14px 18px 20px;
+  }
+
+  .paperCode {
+    display: none;
+  }
+}

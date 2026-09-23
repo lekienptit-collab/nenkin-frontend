@@ -8,6 +8,14 @@ export default [
     ],
   },
 
+  // --- Tong quan ---
+  {
+    path: '/welcome',
+    name: 'welcome',
+    icon: 'dashboard',
+    component: './Welcome',
+  },
+
   // --- Người lao động ---
   {
     path: '/workers',
@@ -126,13 +134,6 @@ export default [
     icon: 'user',
     path: '/profile',
     component: './account',
-  },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    hideInMenu: true,
-    component: './Welcome',
   },
   {
     path: '/',
