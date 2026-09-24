@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import {
   NENKIN_RESULT,
   NENKIN_RESULT_LABELS,
@@ -58,7 +59,9 @@ const NenkinCell: React.FC<{
     <Space direction="vertical" size={2}>
       {missing && missing.length > 0 ? (
         <Tooltip
-          title={`Còn thiếu: ${missing.map((m) => m.label).join(', ')}`}
+          title={tv('Còn thiếu: {fields}', {
+          fields: missing.map((m) => t(m.label)).join(', '),
+        })}
         >
           {statusTag}
         </Tooltip>
@@ -78,7 +81,7 @@ const NenkinCell: React.FC<{
         />
         {canEdit && (
           <Typography.Link style={{ fontSize: 12 }} onClick={onEdit}>
-            sửa
+            {t('sửa')}
           </Typography.Link>
         )}
       </Space>
@@ -99,13 +102,13 @@ export const configColumns = (pa: {
     search: false,
   },
   {
-    title: 'Thông tin Người lao động',
+    title: t('Thông tin Người lao động'),
     dataIndex: 'keyword',
     hideInTable: true,
-    fieldProps: { placeholder: 'Tên, mã số Nenkin, số điện thoại...' },
+    fieldProps: { placeholder: t('Tên, mã số Nenkin, số điện thoại...') },
   },
   {
-    title: 'Họ và tên',
+    title: t('Họ và tên'),
     dataIndex: 'name',
     search: false,
     render: (_, record) => (
@@ -116,7 +119,7 @@ export const configColumns = (pa: {
           </Link>
           {(record.firstMissingFields?.length || record.secondMissingFields?.length) &&
           pa.checkAccess.updateWorker ? (
-            <Tooltip title="Người lao động bị thiếu thông tin">
+            <Tooltip title={t('Người lao động bị thiếu thông tin')}>
               <Link to={`/workers/${record.id}/edit`}>
                 <WarningOutlined style={{ color: '#faad14' }} />
               </Link>
@@ -130,20 +133,20 @@ export const configColumns = (pa: {
     ),
   },
   {
-    title: 'Mã số nenkin',
+    title: t('Mã số nenkin'),
     dataIndex: 'pensionNumber',
     search: false,
     render: (_, record) => record.pensionNumber || '-',
   },
   {
-    title: 'Địa chỉ hiện tại',
+    title: t('Địa chỉ hiện tại'),
     dataIndex: 'addressVnAddress',
     search: false,
     ellipsis: true,
     render: (_, record) => record.addressVnAddress || '-',
   },
   {
-    title: 'Nhân viên tạo',
+    title: t('Nhân viên tạo'),
     dataIndex: 'createdById',
     hideInTable: true,
     valueType: 'select',
@@ -157,7 +160,7 @@ export const configColumns = (pa: {
     },
   },
   {
-    title: 'Ngày tạo',
+    title: t('Ngày tạo'),
     dataIndex: 'createdRange',
     valueType: 'dateRange',
     hideInTable: true,
@@ -169,20 +172,20 @@ export const configColumns = (pa: {
     },
   },
   {
-    title: 'Tạo ngày',
+    title: t('Tạo ngày'),
     dataIndex: 'createAt',
     search: false,
     render: (_, record) => (
       <Space direction="vertical" size={0}>
         <span>{formatDate(record.createAt)}</span>
         <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-          bởi: {record.createdBy?.fullname || record.createdBy?.username || '-'}
+          {t('bởi')}: {record.createdBy?.fullname || record.createdBy?.username || '-'}
         </Typography.Text>
       </Space>
     ),
   },
   {
-    title: 'Hồ sơ Nenkin lần 1',
+    title: t('Hồ sơ Nenkin lần 1'),
     dataIndex: 'firstPaperStatus',
     valueType: 'select',
     valueEnum: paperStatusValueEnum,
@@ -198,14 +201,14 @@ export const configColumns = (pa: {
     ),
   },
   {
-    title: 'Kết quả Nenkin lần 1',
+    title: t('Kết quả Nenkin lần 1'),
     dataIndex: 'nenkinFirstResult',
     valueType: 'select',
     valueEnum: nenkinResultValueEnum,
     hideInTable: true,
   },
   {
-    title: 'Hồ sơ Nenkin lần 2',
+    title: t('Hồ sơ Nenkin lần 2'),
     dataIndex: 'secondPaperStatus',
     valueType: 'select',
     valueEnum: paperStatusValueEnum,
@@ -221,14 +224,14 @@ export const configColumns = (pa: {
     ),
   },
   {
-    title: 'Kết quả Nenkin lần 2',
+    title: t('Kết quả Nenkin lần 2'),
     dataIndex: 'nenkinSecondResult',
     valueType: 'select',
     valueEnum: nenkinResultValueEnum,
     hideInTable: true,
   },
   {
-    title: 'Thao tác',
+    title: t('Thao tác'),
     dataIndex: 'option',
     valueType: 'option',
     width: 120,
@@ -236,14 +239,14 @@ export const configColumns = (pa: {
     render: (_, record) => (
       <Space key="actions">
         {pa.checkAccess.updateWorker && (
-          <Tooltip title="Sửa">
+          <Tooltip title={t('Sửa')}>
             <Link to={`/workers/${record.id}/edit`}>
               <Button size="small" type="text" icon={<EditOutlined />} />
             </Link>
           </Tooltip>
         )}
         {pa.checkAccess.deleteWorker && (
-          <Tooltip title="Xoá">
+          <Tooltip title={t('Xoá')}>
             <Button
               size="small"
               type="text"

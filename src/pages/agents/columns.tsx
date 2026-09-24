@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Link } from '@umijs/max';
@@ -17,13 +18,13 @@ export const configColumns = (pa: {
     search: false,
   },
   {
-    title: 'Thông tin người đại diện',
+    title: t('Thông tin người đại diện'),
     dataIndex: 'keyword',
     hideInTable: true,
-    fieldProps: { placeholder: 'Họ tên, phiên âm, số điện thoại...' },
+    fieldProps: { placeholder: t('Họ tên, phiên âm, số điện thoại...') },
   },
   {
-    title: 'Họ và tên',
+    title: t('Họ và tên'),
     dataIndex: 'name',
     search: false,
     render: (_, record) => (
@@ -40,40 +41,40 @@ export const configColumns = (pa: {
     ),
   },
   {
-    title: 'Số điện thoại',
+    title: t('Số điện thoại'),
     dataIndex: 'phoneNumber',
     search: false,
     render: (_, record) => record.phoneNumber || '-',
   },
   {
-    title: 'Nghề nghiệp ở Nhật Bản',
+    title: t('Nghề nghiệp ở Nhật Bản'),
     dataIndex: 'occupation',
     search: false,
     render: (_, record) => record.occupation || '-',
   },
   {
-    title: 'Ngân hàng',
+    title: t('Ngân hàng'),
     dataIndex: 'bankName',
     search: false,
     render: (_, record) =>
       [record.bankName, record.bankBranchName].filter(Boolean).join(' - ') || '-',
   },
   {
-    title: 'Thao tác',
+    title: t('Thao tác'),
     dataIndex: 'option',
     valueType: 'option',
     width: 120,
     render: (_, record) => (
       <Space key="actions">
         {pa.checkAccess.updateAgent && (
-          <Tooltip title="Sửa">
+          <Tooltip title={t('Sửa')}>
             <Link to={`/agents/${record.id}/edit`}>
               <Button size="small" type="text" icon={<EditOutlined />} />
             </Link>
           </Tooltip>
         )}
         {pa.checkAccess.deleteAgent && (
-          <Tooltip title="Xoá">
+          <Tooltip title={t('Xoá')}>
             <Button
               size="small"
               type="text"

@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import { getRoles } from '@/services/nenkin/role';
 import {
   ProForm,
@@ -50,12 +51,16 @@ const CreateUpdateForm: React.FC<CreateUpdateFormProps> = ({
 
   return (
     <Modal
-      title={isUpdate ? `Cập nhật thành viên: ${values.username}` : 'Thêm thành viên'}
+      title={
+        isUpdate
+          ? tv('Cập nhật thành viên: {name}', { name: values.username })
+          : t('Thêm thành viên')
+      }
       width={640}
       open={modalVisible}
       onCancel={onCancel}
-      okText={isUpdate ? 'Cập nhật' : 'Tạo mới'}
-      cancelText="Huỷ"
+      okText={isUpdate ? t('Cập nhật') : t('Tạo mới')}
+      cancelText={t('Huỷ')}
       onOk={() => form.submit()}
       destroyOnClose
     >
@@ -79,17 +84,17 @@ const CreateUpdateForm: React.FC<CreateUpdateFormProps> = ({
       >
         <ProFormText
           name="username"
-          label="Tên đăng nhập"
+          label={t('Tên đăng nhập')}
           disabled={isUpdate}
           rules={
             isUpdate
               ? []
               : [
-                  { required: true, message: 'Vui lòng nhập tên đăng nhập' },
-                  { min: 3, message: 'Tối thiểu 3 ký tự' },
+                  { required: true, message: t('Vui lòng nhập tên đăng nhập') },
+                  { min: 3, message: t('Tối thiểu 3 ký tự') },
                   {
                     pattern: /^[a-zA-Z0-9._-]+$/,
-                    message: 'Chỉ gồm chữ, số và . _ -',
+                    message: t('Chỉ gồm chữ, số và . _ -'),
                   },
                 ]
           }
@@ -98,39 +103,39 @@ const CreateUpdateForm: React.FC<CreateUpdateFormProps> = ({
           name="email"
           label="Email"
           rules={[
-            { required: true, message: 'Vui lòng nhập email' },
-            { type: 'email', message: 'Email không hợp lệ' },
+            { required: true, message: t('Vui lòng nhập email') },
+            { type: 'email', message: t('Email không hợp lệ') },
           ]}
         />
         <ProFormText.Password
           name="password"
-          label="Mật khẩu"
-          tooltip={isUpdate ? 'Để trống nếu không đổi mật khẩu' : undefined}
+          label={t('Mật khẩu')}
+          tooltip={isUpdate ? t('Để trống nếu không đổi mật khẩu') : undefined}
           rules={
             isUpdate
-              ? [{ min: 8, message: 'Mật khẩu tối thiểu 8 ký tự' }]
+              ? [{ min: 8, message: t('Mật khẩu tối thiểu 8 ký tự') }]
               : [
-                  { required: true, message: 'Vui lòng nhập mật khẩu' },
-                  { min: 8, message: 'Mật khẩu tối thiểu 8 ký tự' },
+                  { required: true, message: t('Vui lòng nhập mật khẩu') },
+                  { min: 8, message: t('Mật khẩu tối thiểu 8 ký tự') },
                 ]
           }
         />
         <ProFormSelect
           name="roleId"
-          label="Vai trò"
+          label={t('Vai trò')}
           request={fetchRoleOptions}
-          rules={[{ required: true, message: 'Vui lòng chọn vai trò' }]}
+          rules={[{ required: true, message: t('Vui lòng chọn vai trò') }]}
         />
-        <ProFormText name="fullname" label="Họ và tên" />
-        <ProFormText name="phone" label="Điện thoại" />
-        <ProFormText name="address" label="Địa chỉ" />
-        <ProFormDatePicker name="birthday" label="Ngày sinh" width="lg" />
-        <ProFormTextArea name="note" label="Ghi chú" />
+        <ProFormText name="fullname" label={t('Họ và tên')} />
+        <ProFormText name="phone" label={t('Điện thoại')} />
+        <ProFormText name="address" label={t('Địa chỉ')} />
+        <ProFormDatePicker name="birthday" label={t('Ngày sinh')} width="lg" />
+        <ProFormTextArea name="note" label={t('Ghi chú')} />
         <ProFormSwitch
           name="isActive"
-          label="Kích hoạt"
-          checkedChildren="Bật"
-          unCheckedChildren="Khoá"
+          label={t('Kích hoạt')}
+          checkedChildren={t('Bật')}
+          unCheckedChildren={t('Khoá')}
         />
       </ProForm>
     </Modal>

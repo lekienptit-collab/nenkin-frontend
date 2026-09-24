@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import { mediaUrl, uploadImage } from '@/services/nenkin/masterData';
 import { DeleteOutlined, FilePdfOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Image, message, Space, Spin, Upload } from 'antd';
@@ -35,16 +36,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const handleUpload = async (file: RcFile) => {
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      message.error(`File tối đa ${MAX_SIZE_MB}MB.`);
+      message.error(tv('File tối đa {n}MB.', { n: MAX_SIZE_MB }));
       return Upload.LIST_IGNORE;
     }
     setUploading(true);
     try {
       const res = await uploadImage(file);
       onChange?.(res?.url);
-      message.success('Đã tải ảnh lên.');
+      message.success(t('Đã tải ảnh lên.'));
     } catch (error) {
-      message.error('Tải ảnh thất bại. Xin thử lại!');
+      message.error(t('Tải ảnh thất bại. Xin thử lại!'));
     } finally {
       setUploading(false);
     }
@@ -61,7 +62,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       <Image src={url} width={width} style={{ borderRadius: 4 }} />
     )
   ) : (
-    <span style={{ color: '#bfbfbf' }}>Chưa có ảnh</span>
+    <span style={{ color: '#bfbfbf' }}>{t('Chưa có ảnh')}</span>
   );
 
   if (readOnly) {
@@ -80,7 +81,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             disabled={disabled || uploading}
           >
             <Button size="small" icon={<UploadOutlined />} disabled={disabled}>
-              {value ? 'Đổi file' : 'Tải file'}
+              {value ? t('Đổi file') : t('Tải file')}
             </Button>
           </Upload>
           {value && (
@@ -91,7 +92,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               disabled={disabled}
               onClick={() => onChange?.(undefined)}
             >
-              Xoá
+              {t('Xoá')}
             </Button>
           )}
         </Space>

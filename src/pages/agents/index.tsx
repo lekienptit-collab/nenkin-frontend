@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import access from '@/access';
 import { agents as queryAgents, deleteAgents } from '@/services/nenkin/agent';
 import { getErrorCode } from '@/utils/error';
@@ -11,9 +12,9 @@ import React, { useRef } from 'react';
 import { configColumns } from './columns';
 
 const ERROR_MESSAGES: Record<string, string> = {
-  AGENT_NOT_FOUND: 'Không tìm thấy người đại diện.',
+  AGENT_NOT_FOUND: t('Không tìm thấy người đại diện.'),
   AGENT_IN_USE:
-    'Người đại diện đang đứng tên trên hồ sơ Nenkin nên không thể xoá.',
+    t('Người đại diện đang đứng tên trên hồ sơ Nenkin nên không thể xoá.'),
 };
 
 const showError = (error: any, fallback: string) => {
@@ -28,17 +29,19 @@ const AgentList: React.FC = () => {
 
   const handleRemove = (record: API.AgentListItem) => {
     Modal.confirm({
-      title: `Bạn chắc chắn muốn xoá người đại diện "${record.name}"?`,
-      okText: 'Xoá',
+      title: tv('Bạn chắc chắn muốn xoá người đại diện "{name}"?', {
+        name: record.name,
+      }),
+      okText: t('Xoá'),
       okButtonProps: { danger: true },
-      cancelText: 'Huỷ',
+      cancelText: t('Huỷ'),
       onOk: async () => {
         try {
           await deleteAgents([record.id!]);
-          message.success('Đã xoá thành công.');
+          message.success(t('Đã xoá thành công.'));
           actionRef.current?.reload();
         } catch (error) {
-          showError(error, 'Quá trình xoá bị lỗi. Xin thử lại!');
+          showError(error, t('Quá trình xoá bị lỗi. Xin thử lại!'));
         }
       },
     });
@@ -48,11 +51,11 @@ const AgentList: React.FC = () => {
 
   return (
     <PageContainer
-      title="Người đại diện"
-      content="Những người được uỷ quyền đứng tên trên hồ sơ Nenkin của người lao động."
+      title={t('Người đại diện')}
+      content={t('Những người được uỷ quyền đứng tên trên hồ sơ Nenkin của người lao động.')}
     >
       <ProTable<API.AgentListItem, API.AgentQueryParams>
-        headerTitle="Danh sách người đại diện"
+        headerTitle={t('Danh sách người đại diện')}
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
@@ -60,7 +63,7 @@ const AgentList: React.FC = () => {
         pagination={{
           pageSize: 20,
           showSizeChanger: true,
-          showTotal: showTotal('người đại diện'),
+          showTotal: showTotal(t('người đại diện')),
         }}
         toolBarRender={() => [
           checkAccess.createAgent && (
@@ -70,7 +73,7 @@ const AgentList: React.FC = () => {
               icon={<PlusOutlined />}
               onClick={() => history.push('/agents/create')}
             >
-              Thêm mới
+              {t('Thêm mới')}
             </Button>
           ),
         ]}

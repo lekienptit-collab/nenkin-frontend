@@ -1,6 +1,6 @@
 import { refreshToken } from '@/services/nenkin/auth';
 import { getToken, setToken } from '@/utils/token';
-import { useModel } from '@umijs/max';
+import { SelectLang, useModel } from '@umijs/max';
 import { Space } from 'antd';
 import React, { useEffect } from 'react';
 import Avatar from './AvatarDropdown';
@@ -47,6 +47,7 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
+      <SelectLang globalIconClassName="select-lang" />
       <Avatar />
     </Space>
   );

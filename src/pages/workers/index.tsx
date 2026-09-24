@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import access from '@/access';
 import { SERVICE_TYPE, WORKER_QUICK_FILTERS } from '@/constants/nenkin';
 import {
@@ -18,7 +19,7 @@ import NenkinResultModal from './components/NenkinResultModal';
 import styles from './index.less';
 
 const ERROR_MESSAGES: Record<string, string> = {
-  WORKER_NOT_FOUND: 'Không tìm thấy người lao động.',
+  WORKER_NOT_FOUND: t('Không tìm thấy người lao động.'),
 };
 
 const showError = (error: any, fallback: string) => {
@@ -51,18 +52,20 @@ const WorkerList: React.FC = () => {
 
   const handleRemove = (record: API.WorkerListItem) => {
     Modal.confirm({
-      title: `Bạn chắc chắn muốn xoá người lao động "${record.name}"?`,
-      content: 'Hồ sơ Nenkin đã làm cho người này cũng sẽ không còn truy cập được.',
-      okText: 'Xoá',
+      title: tv('Bạn chắc chắn muốn xoá người lao động "{name}"?', {
+        name: record.name,
+      }),
+      content: t('Hồ sơ Nenkin đã làm cho người này cũng sẽ không còn truy cập được.'),
+      okText: t('Xoá'),
       okButtonProps: { danger: true },
-      cancelText: 'Huỷ',
+      cancelText: t('Huỷ'),
       onOk: async () => {
         try {
           await deleteWorkers([record.id!]);
-          message.success('Đã xoá thành công.');
+          message.success(t('Đã xoá thành công.'));
           actionRef.current?.reload();
         } catch (error) {
-          showError(error, 'Quá trình xoá bị lỗi. Xin thử lại!');
+          showError(error, t('Quá trình xoá bị lỗi. Xin thử lại!'));
         }
       },
     });
@@ -71,11 +74,11 @@ const WorkerList: React.FC = () => {
   const handleUpdateResult = async (values: API.UpdateNenkinResultForm) => {
     try {
       await updateNenkinResult(resultTarget!.worker.id!, values);
-      message.success('Đã cập nhật kết quả Nenkin.');
+      message.success(t('Đã cập nhật kết quả Nenkin.'));
       setResultTarget(undefined);
       actionRef.current?.reload();
     } catch (error) {
-      showError(error, 'Cập nhật bị lỗi. Xin thử lại!');
+      showError(error, t('Cập nhật bị lỗi. Xin thử lại!'));
     }
   };
 
@@ -87,11 +90,11 @@ const WorkerList: React.FC = () => {
 
   return (
     <PageContainer
-      title="Người lao động"
-      content="Hồ sơ người lao động cùng tình trạng giấy tờ và kết quả của từng lần thủ tục Nenkin."
+      title={t('Người lao động')}
+      content={t('Hồ sơ người lao động cùng tình trạng giấy tờ và kết quả của từng lần thủ tục Nenkin.')}
     >
       <ProTable<API.WorkerListItem, API.WorkerQueryParams>
-        headerTitle="Danh sách người lao động"
+        headerTitle={t('Danh sách người lao động')}
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
@@ -99,7 +102,7 @@ const WorkerList: React.FC = () => {
         pagination={{
           pageSize: 20,
           showSizeChanger: true,
-          showTotal: showTotal('người lao động'),
+          showTotal: showTotal(t('người lao động')),
         }}
         scroll={{ x: 1200 }}
         params={quickFilter.params}
@@ -115,7 +118,7 @@ const WorkerList: React.FC = () => {
         tableExtraRender={() => (
           <div className={styles.quickBar}>
             <span className={styles.quickLabel}>
-              <TagsOutlined /> Tìm nhanh
+              <TagsOutlined /> {t('Tìm nhanh')}
             </span>
             <Space size={[8, 8]} wrap>
               {WORKER_QUICK_FILTERS.map((f) => (
@@ -136,7 +139,7 @@ const WorkerList: React.FC = () => {
                   type="link"
                   onClick={() => setQuickFilter({ params: {} })}
                 >
-                  Bỏ lọc
+                  {t('Bỏ lọc')}
                 </Button>
               )}
             </Space>
@@ -150,7 +153,7 @@ const WorkerList: React.FC = () => {
               icon={<PlusOutlined />}
               onClick={() => history.push('/workers/create')}
             >
-              Thêm mới
+              {t('Thêm mới')}
             </Button>
           ),
         ]}

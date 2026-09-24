@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import { getRoles } from '@/services/nenkin/role';
 import { ProForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { Alert, Form, Modal } from 'antd';
@@ -41,12 +42,16 @@ const CreateUpdateForm: React.FC<CreateUpdateFormProps> = ({
 
   return (
     <Modal
-      title={isUpdate ? `Cập nhật quyền: ${values.name}` : 'Tạo quyền mới'}
+      title={
+        isUpdate
+          ? tv('Cập nhật quyền: {name}', { name: values.name })
+          : t('Tạo quyền mới')
+      }
       width={640}
       open={modalVisible}
       onCancel={onCancel}
-      okText={isUpdate ? 'Cập nhật' : 'Tạo mới'}
-      cancelText="Huỷ"
+      okText={isUpdate ? t('Cập nhật') : t('Tạo mới')}
+      cancelText={t('Huỷ')}
       onOk={() => form.submit()}
       destroyOnClose
     >
@@ -55,7 +60,7 @@ const CreateUpdateForm: React.FC<CreateUpdateFormProps> = ({
           type="info"
           showIcon
           style={{ marginBottom: 16 }}
-          message="Đây là quyền mặc định của hệ thống, không đổi được tên và mã. Bạn vẫn có thể chỉnh permission ở màn hình Phân quyền."
+          message={t('Đây là quyền mặc định của hệ thống, không đổi được tên và mã. Bạn vẫn có thể chỉnh permission ở màn hình Phân quyền.')}
         />
       )}
 
@@ -69,29 +74,29 @@ const CreateUpdateForm: React.FC<CreateUpdateFormProps> = ({
       >
         <ProFormText
           name="name"
-          label="Tên quyền"
+          label={t('Tên quyền')}
           disabled={isSystemRole}
-          rules={[{ required: true, message: 'Vui lòng nhập tên quyền' }]}
+          rules={[{ required: true, message: t('Vui lòng nhập tên quyền') }]}
         />
         <ProFormText
           name="slug"
-          label="Mã quyền"
+          label={t('Mã quyền')}
           disabled={isSystemRole}
-          tooltip="Chỉ gồm chữ thường, số, dấu - và _"
+          tooltip={t('Chỉ gồm chữ thường, số, dấu - và _')}
           rules={[
-            { required: true, message: 'Vui lòng nhập mã quyền' },
+            { required: true, message: t('Vui lòng nhập mã quyền') },
             {
               pattern: /^[a-z0-9-_]+$/,
-              message: 'Chỉ gồm chữ thường, số, dấu - và _',
+              message: t('Chỉ gồm chữ thường, số, dấu - và _'),
             },
           ]}
         />
         <ProFormSelect
           name="roleId"
-          label="Quyền cha"
+          label={t('Quyền cha')}
           disabled={isSystemRole}
           request={fetchRoleOptions}
-          tooltip="Quyền con không được vượt quá permission của quyền cha"
+          tooltip={t('Quyền con không được vượt quá permission của quyền cha')}
         />
       </ProForm>
     </Modal>

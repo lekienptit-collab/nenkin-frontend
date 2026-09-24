@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import access from '@/access';
 import { addRole, removeRole, role as queryRoles, updateRole } from '@/services/nenkin/role';
 import { getErrorCode } from '@/utils/error';
@@ -13,10 +14,10 @@ import type { FormValueType } from './components/CreateUpdateForm';
 import CreateUpdateForm from './components/CreateUpdateForm';
 
 const ERROR_MESSAGES: Record<string, string> = {
-  ROLE_SLUG_ALREADY_EXISTS: 'Mã quyền đã tồn tại.',
-  ROLE_NOT_FOUND: 'Không tìm thấy quyền.',
-  'Can not delete role default': 'Không xoá được quyền mặc định hoặc quyền đang có quyền con.',
-  ROLE_HAS_USER: 'Quyền này đang được gán cho thành viên, không thể xoá.',
+  ROLE_SLUG_ALREADY_EXISTS: t('Mã quyền đã tồn tại.'),
+  ROLE_NOT_FOUND: t('Không tìm thấy quyền.'),
+  'Can not delete role default': t('Không xoá được quyền mặc định hoặc quyền đang có quyền con.'),
+  ROLE_HAS_USER: t('Quyền này đang được gán cho thành viên, không thể xoá.'),
 };
 
 const showError = (error: any, fallback: string) => {
@@ -33,21 +34,21 @@ const RoleList: React.FC = () => {
   const [formVisible, setFormVisible] = useState(false);
 
   const handleAdd = async (fields: FormValueType) => {
-    const hide = message.loading('Đang tạo...');
+    const hide = message.loading(t('Đang tạo...'));
     try {
       await addRole(fields);
       hide();
-      message.success('Thêm mới thành công!');
+      message.success(t('Thêm mới thành công!'));
       return true;
     } catch (error) {
       hide();
-      showError(error, 'Thêm mới bị lỗi. Xin thử lại!');
+      showError(error, t('Thêm mới bị lỗi. Xin thử lại!'));
       return false;
     }
   };
 
   const handleUpdate = async (id: number, fields: FormValueType) => {
-    const hide = message.loading('Đang cập nhật...');
+    const hide = message.loading(t('Đang cập nhật...'));
     try {
       await updateRole(id, {
         name: fields.name,
@@ -55,28 +56,28 @@ const RoleList: React.FC = () => {
         roleId: fields.roleId || undefined,
       });
       hide();
-      message.success('Đã cập nhật thành công.');
+      message.success(t('Đã cập nhật thành công.'));
       return true;
     } catch (error) {
       hide();
-      showError(error, 'Cập nhật bị lỗi. Xin thử lại!');
+      showError(error, t('Cập nhật bị lỗi. Xin thử lại!'));
       return false;
     }
   };
 
   const handleRemove = (record: API.RoleListItem) => {
     Modal.confirm({
-      title: `Bạn chắc chắn muốn xoá quyền "${record.name}"?`,
-      okText: 'Xoá',
+      title: tv('Bạn chắc chắn muốn xoá quyền "{name}"?', { name: record.name }),
+      okText: t('Xoá'),
       okButtonProps: { danger: true },
-      cancelText: 'Huỷ',
+      cancelText: t('Huỷ'),
       onOk: async () => {
         try {
           await removeRole(record.id);
-          message.success('Đã xoá thành công.');
+          message.success(t('Đã xoá thành công.'));
           actionRef.current?.reload();
         } catch (error) {
-          showError(error, 'Quá trình xoá bị lỗi. Xin thử lại!');
+          showError(error, t('Quá trình xoá bị lỗi. Xin thử lại!'));
         }
       },
     });
@@ -94,11 +95,11 @@ const RoleList: React.FC = () => {
 
   return (
     <PageContainer
-      title="Quản lý quyền"
-      content="Nhóm quyền theo cấp bậc; mỗi nhóm được phân quyền chi tiết tới từng chức năng."
+      title={t('Quản lý quyền')}
+      content={t('Nhóm quyền theo cấp bậc; mỗi nhóm được phân quyền chi tiết tới từng chức năng.')}
     >
       <ProTable<API.RoleListItem, API.RoleQueryParams>
-        headerTitle="Danh sách quyền"
+        headerTitle={t('Danh sách quyền')}
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
@@ -106,7 +107,7 @@ const RoleList: React.FC = () => {
         pagination={{
           pageSize: 20,
           showSizeChanger: true,
-          showTotal: showTotal('quyền'),
+          showTotal: showTotal(t('quyền')),
         }}
         toolBarRender={() => [
           checkAccess.createRole && (
@@ -119,7 +120,7 @@ const RoleList: React.FC = () => {
                 setFormVisible(true);
               }}
             >
-              Thêm mới
+              {t('Thêm mới')}
             </Button>
           ),
         ]}

@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import { DefaultFooter } from '@ant-design/pro-components';
 
 const Footer: React.FC<{ className?: string }> = ({ className }) => {
@@ -6,7 +7,7 @@ const Footer: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <DefaultFooter
       className={className}
-      copyright={`${currentYear} Nenkin · Hệ thống quản trị hồ sơ bảo hiểm hưu trí Nhật Bản`}
+      copyright={`${currentYear} ${t('Nenkin · Hệ thống quản trị hồ sơ bảo hiểm hưu trí Nhật Bản')}`}
       links={[]}
       style={{ background: 'none', paddingBlock: 20, fontSize: 13 }}
     />

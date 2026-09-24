@@ -1,3 +1,5 @@
+import { t } from '@/utils/t';
+import { mediaUrl } from '@/services/nenkin/masterData';
 import { outLogin } from '@/services/nenkin/auth';
 import { getToken, logoutToken } from '@/utils/token';
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
@@ -61,9 +63,9 @@ const AvatarDropdown: React.FC = () => {
   }
 
   const menuItems: MenuProps['items'] = [
-    { key: 'profile', icon: <UserOutlined />, label: 'Thông tin cá nhân' },
+    { key: 'profile', icon: <UserOutlined />, label: t('Thông tin cá nhân') },
     { type: 'divider' as const },
-    { key: 'logout', icon: <LogoutOutlined />, label: 'Đăng xuất' },
+    { key: 'logout', icon: <LogoutOutlined />, label: t('Đăng xuất') },
   ];
 
   return (
@@ -72,7 +74,7 @@ const AvatarDropdown: React.FC = () => {
         <Avatar
           size={32}
           className={styles.avatar}
-          src={currentUser.avatar}
+          src={mediaUrl(currentUser.avatar)}
           icon={!currentUser.avatar ? <UserOutlined /> : undefined}
           alt="avatar"
         />

@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { history } from '@umijs/max';
@@ -14,8 +15,8 @@ export const errorConfig: RequestConfig = {
 
       if (!response) {
         notification.error({
-          message: 'Lỗi kết nối',
-          description: 'Không kết nối được tới máy chủ. Vui lòng thử lại.',
+          message: t('Lỗi kết nối'),
+          description: t('Không kết nối được tới máy chủ. Vui lòng thử lại.'),
         });
         throw error;
       }
@@ -31,8 +32,8 @@ export const errorConfig: RequestConfig = {
 
       if (response.status === 403) {
         notification.error({
-          message: 'Không có quyền',
-          description: 'Bạn không có quyền thực hiện thao tác này.',
+          message: t('Không có quyền'),
+          description: t('Bạn không có quyền thực hiện thao tác này.'),
         });
         throw error;
       }

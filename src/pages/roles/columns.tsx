@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import { DeleteOutlined, SafetyOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
@@ -11,58 +12,58 @@ export const configColumns = (pa: {
 }): ProColumns<API.RoleListItem>[] => {
   return [
     {
-      title: 'Tên quyền',
+      title: t('Tên quyền'),
       dataIndex: 'name',
       render: (_, record) => <strong>{record.name}</strong>,
     },
     {
-      title: 'Mã quyền',
+      title: t('Mã quyền'),
       dataIndex: 'slug',
       render: (_, record) => <Tag>{record.slug}</Tag>,
     },
     {
-      title: 'Quyền cha',
+      title: t('Quyền cha'),
       dataIndex: 'parent',
       render: (_, record) => record?.parent?.name || '-',
     },
     {
-      title: 'Số permission',
+      title: t('Số permission'),
       dataIndex: 'permissions',
       search: false,
       render: (_, record) => {
         if (record.permissions?.includes('all')) {
-          return <Tag color="red">Toàn quyền</Tag>;
+          return <Tag color="red">{t('Toàn quyền')}</Tag>;
         }
         return record.permissions?.length || 0;
       },
     },
     {
-      title: 'Loại',
+      title: t('Loại'),
       dataIndex: 'isCanEdit',
       search: false,
       render: (_, record) =>
-        record.isCanEdit ? <Tag color="blue">Tuỳ chỉnh</Tag> : <Tag>Mặc định</Tag>,
+        record.isCanEdit ? <Tag color="blue">{t('Tuỳ chỉnh')}</Tag> : <Tag>{t('Mặc định')}</Tag>,
     },
     {
-      title: 'Cập nhật lúc',
+      title: t('Cập nhật lúc'),
       dataIndex: 'updatedAt',
       valueType: 'dateTime',
       search: false,
     },
     {
-      title: 'Thao tác',
+      title: t('Thao tác'),
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => (
         <Space key="actions">
           {pa.checkAccess.updateRole && (
             <a key="update" onClick={() => pa.onUpdate(record)}>
-              Sửa
+              {t('Sửa')}
             </a>
           )}
           {pa.checkAccess.updateRolePermissions && (
             <a key="permission" onClick={() => pa.onPermissionAssign(record)}>
-              <SafetyOutlined /> Phân quyền
+              <SafetyOutlined /> {t('Phân quyền')}
             </a>
           )}
           {pa.checkAccess.deleteRole && record.isCanEdit && (
@@ -74,7 +75,7 @@ export const configColumns = (pa: {
               icon={<DeleteOutlined />}
               onClick={() => pa.onDelete(record)}
             >
-              Xoá
+              {t('Xoá')}
             </Button>
           )}
         </Space>

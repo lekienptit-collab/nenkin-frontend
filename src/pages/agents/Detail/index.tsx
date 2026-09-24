@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import access from '@/access';
 import { getAgent } from '@/services/nenkin/agent';
 import { masterData as queryMasterData } from '@/services/nenkin/masterData';
@@ -21,66 +22,68 @@ const AgentDetail: React.FC = () => {
   );
 
   const accountTypeLabel =
-    master?.bankAccountTypes?.find(
-      (t) => Number(t.value) === agent?.bankAccountType,
-    )?.label || '-';
+    t(
+      master?.bankAccountTypes?.find(
+        (o) => Number(o.value) === agent?.bankAccountType,
+      )?.label,
+    ) || '-';
 
   return (
     <PageContainer
-      title={agent?.name || 'Chi tiết người đại diện'}
+      title={agent?.name || t('Chi tiết người đại diện')}
       loading={loading}
       onBack={() => history.back()}
       extra={
         checkAccess.updateAgent && (
           <Link to={`/agents/${agentId}/edit`}>
             <Button type="primary" icon={<EditOutlined />}>
-              Thay đổi
+              {t('Thay đổi')}
             </Button>
           </Link>
         )
       }
     >
-      <ProCard title="Thông tin cơ bản" bordered style={{ marginBottom: 16 }}>
+      <ProCard title={t('Thông tin cơ bản')} bordered style={{ marginBottom: 16 }}>
         <ProDescriptions column={{ xs: 1, md: 2 }}>
-          <ProDescriptions.Item label="Họ và tên">{agent?.name}</ProDescriptions.Item>
-          <ProDescriptions.Item label="Họ và tên (phiên âm)">
+          <ProDescriptions.Item label={t('Họ và tên')}>{agent?.name}</ProDescriptions.Item>
+          <ProDescriptions.Item label={t('Họ và tên (phiên âm)')}>
             {agent?.nameFurigana || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Số điện thoại">
+          <ProDescriptions.Item label={t('Số điện thoại')}>
             {agent?.phoneNumber || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Nghề nghiệp ở Nhật Bản">
+          <ProDescriptions.Item label={t('Nghề nghiệp ở Nhật Bản')}>
             {agent?.occupation || '-'}
           </ProDescriptions.Item>
         </ProDescriptions>
       </ProCard>
 
-      <ProCard title="Thông tin tài khoản" bordered style={{ marginBottom: 16 }}>
+      <ProCard title={t('Thông tin tài khoản')} bordered style={{ marginBottom: 16 }}>
         <ProDescriptions column={{ xs: 1, md: 2 }}>
-          <ProDescriptions.Item label="Tên ngân hàng">
+          <ProDescriptions.Item label={t('Tên ngân hàng')}>
             {agent?.bankName || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Tên chi nhánh">
+          <ProDescriptions.Item label={t('Tên chi nhánh')}>
             {agent?.bankBranchName || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Tên tài khoản">
+          <ProDescriptions.Item label={t('Tên tài khoản')}>
             {agent?.bankAccountName || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Số tài khoản">
+          <ProDescriptions.Item label={t('Số tài khoản')}>
             {agent?.bankAccountNumber || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Loại tài khoản">
+          <ProDescriptions.Item label={t('Loại tài khoản')}>
             {accountTypeLabel}
           </ProDescriptions.Item>
         </ProDescriptions>
       </ProCard>
 
-      <ProCard title="Thông tin địa chỉ ở Nhật" bordered>
+      <ProCard title={t('Thông tin địa chỉ ở Nhật')} bordered>
         <ProDescriptions column={{ xs: 1, md: 2 }}>
-          <ProDescriptions.Item label="Mã bưu điện">
+          <ProDescriptions.Item label={t('Mã bưu điện')}>
             {agent?.addressPostalCode || '-'}
           </ProDescriptions.Item>
-          <ProDescriptions.Item label="Địa chỉ đầy đủ">
+          <ProDescriptions.Item label={t('Địa chỉ đầy đủ')}>
             {agent?.addressDetail || '-'}
           </ProDescriptions.Item>
         </ProDescriptions>

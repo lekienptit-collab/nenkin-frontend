@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import access from '@/access';
 import BrandMark from '@/components/BrandMark';
 import {
@@ -20,13 +21,21 @@ import styles from './index.less';
 
 const { Paragraph, Text, Title } = Typography;
 
-const WEEKDAYS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+const WEEKDAYS = [
+  t('Chủ nhật'),
+  t('Thứ hai'),
+  t('Thứ ba'),
+  t('Thứ tư'),
+  t('Thứ năm'),
+  t('Thứ sáu'),
+  t('Thứ bảy'),
+];
 
 const greeting = (hour: number) => {
-  if (hour < 11) return 'Chào buổi sáng';
-  if (hour < 14) return 'Chào buổi trưa';
-  if (hour < 18) return 'Chào buổi chiều';
-  return 'Chào buổi tối';
+  if (hour < 11) return t('Chào buổi sáng');
+  if (hour < 14) return t('Chào buổi trưa');
+  if (hour < 18) return t('Chào buổi chiều');
+  return t('Chào buổi tối');
 };
 
 type Shortcut = {
@@ -46,14 +55,14 @@ const Welcome: React.FC = () => {
 
   const now = dayjs();
   const permissionCount = currentUser?.permissions?.includes('all')
-    ? 'Toàn quyền'
+    ? t('Toàn quyền')
     : currentUser?.permissions?.length || 0;
 
   const shortcuts: Shortcut[] = [
     {
       key: 'worker',
-      title: 'Người lao động',
-      description: 'Hồ sơ cá nhân, giấy tờ và tình trạng từng lần thủ tục.',
+      title: t('Người lao động'),
+      description: t('Hồ sơ cá nhân, giấy tờ và tình trạng từng lần thủ tục.'),
       icon: <IdcardOutlined />,
       path: '/workers',
       tone: styles.toneBlue,
@@ -61,8 +70,8 @@ const Welcome: React.FC = () => {
     },
     {
       key: 'agent',
-      title: 'Người đại diện',
-      description: 'Danh sách người được uỷ quyền đứng tên trên hồ sơ.',
+      title: t('Người đại diện'),
+      description: t('Danh sách người được uỷ quyền đứng tên trên hồ sơ.'),
       icon: <SolutionOutlined />,
       path: '/agents',
       tone: styles.toneViolet,
@@ -70,8 +79,8 @@ const Welcome: React.FC = () => {
     },
     {
       key: 'nenkin',
-      title: 'Thủ tục Nenkin',
-      description: 'Tạo hồ sơ lần 1, lần 2 và tải bộ giấy tờ PDF.',
+      title: t('Thủ tục Nenkin'),
+      description: t('Tạo hồ sơ lần 1, lần 2 và tải bộ giấy tờ PDF.'),
       icon: <FileProtectOutlined />,
       path: '/nenkin',
       tone: styles.toneAmber,
@@ -79,8 +88,8 @@ const Welcome: React.FC = () => {
     },
     {
       key: 'user',
-      title: 'Thành viên',
-      description: 'Tài khoản nhân viên đang sử dụng hệ thống.',
+      title: t('Thành viên'),
+      description: t('Tài khoản nhân viên đang sử dụng hệ thống.'),
       icon: <TeamOutlined />,
       path: '/users/list',
       tone: styles.toneTeal,
@@ -88,8 +97,8 @@ const Welcome: React.FC = () => {
     },
     {
       key: 'role',
-      title: 'Quản lý quyền',
-      description: 'Nhóm quyền và phân quyền chi tiết theo chức năng.',
+      title: t('Quản lý quyền'),
+      description: t('Nhóm quyền và phân quyền chi tiết theo chức năng.'),
       icon: <SafetyCertificateOutlined />,
       path: '/users/role',
       tone: styles.toneRose,
@@ -110,18 +119,22 @@ const Welcome: React.FC = () => {
               {WEEKDAYS[now.day()]}, {now.format('DD/MM/YYYY')}
             </div>
             <Title level={2} className={styles.heroTitle}>
-              {greeting(now.hour())}, {currentUser?.fullname || currentUser?.username || 'bạn'}!
+              {greeting(now.hour())}, {currentUser?.fullname || currentUser?.username || t('bạn')}!
             </Title>
             <Paragraph className={styles.heroDesc}>
-              Chúc bạn một ngày làm việc hiệu quả. Chọn một mục bên dưới để bắt đầu xử lý hồ sơ
+              {t('Chúc bạn một ngày làm việc hiệu quả. Chọn một mục bên dưới để bắt đầu xử lý hồ sơ.')}
               Nenkin.
             </Paragraph>
 
             <Space size={8} wrap>
               {currentUser?.roleName && (
-                <Tag className={styles.heroTag}>Vai trò: {currentUser.roleName}</Tag>
+                <Tag className={styles.heroTag}>
+                  {t('Vai trò')}: {currentUser.roleName}
+                </Tag>
               )}
-              <Tag className={styles.heroTag}>Số quyền: {permissionCount}</Tag>
+              <Tag className={styles.heroTag}>
+                {t('Số quyền')}: {permissionCount}
+              </Tag>
             </Space>
           </div>
 
@@ -135,7 +148,7 @@ const Welcome: React.FC = () => {
                 className={styles.heroButton}
                 onClick={() => history.push('/workers/create')}
               >
-                Thêm người lao động
+                {t('Thêm người lao động')}
               </Button>
             )}
           </div>
@@ -145,7 +158,7 @@ const Welcome: React.FC = () => {
       {/* Loi tat toi cac man hinh chinh */}
       {shortcuts.length > 0 && (
         <>
-          <div className={styles.sectionTitle}>Lối tắt</div>
+          <div className={styles.sectionTitle}>{t('Lối tắt')}</div>
           <Row gutter={[16, 16]} className={styles.shortcutRow}>
             {shortcuts.map((item) => (
               <Col key={item.key} xs={24} sm={12} lg={8} xxl={6}>
@@ -172,7 +185,7 @@ const Welcome: React.FC = () => {
       <Row gutter={[16, 16]}>
         {/* Quy trinh chuan de nhan vien moi nam duoc thu tu lam viec */}
         <Col xs={24} xl={15}>
-          <Card title="Quy trình làm hồ sơ" className={styles.panel}>
+          <Card title={t('Quy trình làm hồ sơ')} className={styles.panel}>
             <Steps
               direction="vertical"
               size="small"
@@ -180,23 +193,20 @@ const Welcome: React.FC = () => {
               className={styles.steps}
               items={[
                 {
-                  title: 'Thêm người lao động',
-                  description:
-                    'Nhập thông tin cá nhân, địa chỉ, ngân hàng và tải ảnh giấy tờ. Có thể dùng AI đọc ảnh để điền nhanh.',
+                  title: t('Thêm người lao động'),
+                  description: t('Nhập thông tin cá nhân, địa chỉ, ngân hàng và tải ảnh giấy tờ. Có thể dùng AI đọc ảnh để điền nhanh.'),
                 },
                 {
-                  title: 'Thêm người đại diện',
-                  description: 'Người được uỷ quyền đứng tên nhận kết quả và làm việc với cơ quan Nhật Bản.',
+                  title: t('Thêm người đại diện'),
+                  description: t('Người được uỷ quyền đứng tên nhận kết quả và làm việc với cơ quan Nhật Bản.'),
                 },
                 {
-                  title: 'Làm thủ tục Nenkin',
-                  description:
-                    'Chọn thủ tục lần 1 (hoàn bảo hiểm) hoặc lần 2 (hoàn thuế), hệ thống sinh đủ bộ giấy tờ.',
+                  title: t('Làm thủ tục Nenkin'),
+                  description: t('Chọn thủ tục lần 1 (hoàn bảo hiểm) hoặc lần 2 (hoàn thuế), hệ thống sinh đủ bộ giấy tờ.'),
                 },
                 {
-                  title: 'Tải bộ hồ sơ và cập nhật kết quả',
-                  description:
-                    'Tải PDF từng giấy tờ hoặc cả bộ, sau đó ghi nhận ngày có kết quả cho từng lần.',
+                  title: t('Tải bộ hồ sơ và cập nhật kết quả'),
+                  description: t('Tải PDF từng giấy tờ hoặc cả bộ, sau đó ghi nhận ngày có kết quả cho từng lần.'),
                 },
               ]}
             />
@@ -205,7 +215,7 @@ const Welcome: React.FC = () => {
 
         {/* Thong tin tai khoan dang dang nhap */}
         <Col xs={24} xl={9}>
-          <Card title="Tài khoản của bạn" className={styles.panel}>
+          <Card title={t('Tài khoản của bạn')} className={styles.panel}>
             <div className={styles.account}>
               <div className={styles.accountAvatar}>
                 {(currentUser?.fullname || currentUser?.username || 'N').charAt(0).toUpperCase()}
@@ -221,20 +231,20 @@ const Welcome: React.FC = () => {
             <ul className={styles.accountList}>
               <li>
                 <MailOutlined />
-                <span>{currentUser?.email || 'Chưa có email'}</span>
+                <span>{currentUser?.email || t('Chưa có email')}</span>
               </li>
               <li>
                 <PhoneOutlined />
-                <span>{currentUser?.phone || 'Chưa có số điện thoại'}</span>
+                <span>{currentUser?.phone || t('Chưa có số điện thoại')}</span>
               </li>
               <li>
                 <SafetyCertificateOutlined />
-                <span>{currentUser?.roleName || 'Chưa gán vai trò'}</span>
+                <span>{currentUser?.roleName || t('Chưa gán vai trò')}</span>
               </li>
             </ul>
 
             <Button block onClick={() => history.push('/profile')}>
-              Cập nhật thông tin cá nhân
+              {t('Cập nhật thông tin cá nhân')}
             </Button>
           </Card>
         </Col>

@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import access from '@/access';
 import {
   addUser,
@@ -19,12 +20,12 @@ import type { FormValueType } from './components/CreateUpdateForm';
 import CreateUpdateForm from './components/CreateUpdateForm';
 
 const ERROR_MESSAGES: Record<string, string> = {
-  'Username already exists': 'Tên đăng nhập đã tồn tại.',
-  'Email already exists': 'Email đã được sử dụng.',
-  ROLE_NOT_FOUND: 'Vai trò không tồn tại.',
-  USER_NOT_FOUND: 'Không tìm thấy thành viên.',
-  CAN_NOT_DELETE_YOURSELF: 'Không thể xoá chính tài khoản của bạn.',
-  CAN_NOT_BAN_YOURSELF: 'Không thể khoá chính tài khoản của bạn.',
+  'Username already exists': t('Tên đăng nhập đã tồn tại.'),
+  'Email already exists': t('Email đã được sử dụng.'),
+  ROLE_NOT_FOUND: t('Vai trò không tồn tại.'),
+  USER_NOT_FOUND: t('Không tìm thấy thành viên.'),
+  CAN_NOT_DELETE_YOURSELF: t('Không thể xoá chính tài khoản của bạn.'),
+  CAN_NOT_BAN_YOURSELF: t('Không thể khoá chính tài khoản của bạn.'),
 };
 
 const showError = (error: any, fallback: string) => {
@@ -42,29 +43,29 @@ const UserList: React.FC = () => {
   const [formVisible, setFormVisible] = useState(false);
 
   const handleAdd = async (fields: FormValueType) => {
-    const hide = message.loading('Đang tạo...');
+    const hide = message.loading(t('Đang tạo...'));
     try {
       await addUser(fields);
       hide();
-      message.success('Thêm mới thành công!');
+      message.success(t('Thêm mới thành công!'));
       return true;
     } catch (error) {
       hide();
-      showError(error, 'Thêm mới bị lỗi. Xin thử lại!');
+      showError(error, t('Thêm mới bị lỗi. Xin thử lại!'));
       return false;
     }
   };
 
   const handleUpdate = async (id: string, fields: FormValueType) => {
-    const hide = message.loading('Đang cập nhật...');
+    const hide = message.loading(t('Đang cập nhật...'));
     try {
       await updateUser(id, fields);
       hide();
-      message.success('Đã cập nhật thành công.');
+      message.success(t('Đã cập nhật thành công.'));
       return true;
     } catch (error) {
       hide();
-      showError(error, 'Cập nhật bị lỗi. Xin thử lại!');
+      showError(error, t('Cập nhật bị lỗi. Xin thử lại!'));
       return false;
     }
   };
@@ -72,26 +73,28 @@ const UserList: React.FC = () => {
   const handleToggleActive = async (record: API.UserListItem, isActive: boolean) => {
     try {
       await banUnBanUser(record.id!, isActive);
-      message.success(isActive ? 'Đã mở khoá tài khoản.' : 'Đã khoá tài khoản.');
+      message.success(isActive ? t('Đã mở khoá tài khoản.') : t('Đã khoá tài khoản.'));
       actionRef.current?.reload();
     } catch (error) {
-      showError(error, 'Thao tác bị lỗi. Xin thử lại!');
+      showError(error, t('Thao tác bị lỗi. Xin thử lại!'));
     }
   };
 
   const handleRemove = (record: API.UserListItem) => {
     Modal.confirm({
-      title: `Bạn chắc chắn muốn xoá thành viên "${record.username}"?`,
-      okText: 'Xoá',
+      title: tv('Bạn chắc chắn muốn xoá thành viên "{name}"?', {
+        name: record.username,
+      }),
+      okText: t('Xoá'),
       okButtonProps: { danger: true },
-      cancelText: 'Huỷ',
+      cancelText: t('Huỷ'),
       onOk: async () => {
         try {
           await deleteUsers([record.id!]);
-          message.success('Đã xoá thành công.');
+          message.success(t('Đã xoá thành công.'));
           actionRef.current?.reload();
         } catch (error) {
-          showError(error, 'Quá trình xoá bị lỗi. Xin thử lại!');
+          showError(error, t('Quá trình xoá bị lỗi. Xin thử lại!'));
         }
       },
     });
@@ -110,11 +113,11 @@ const UserList: React.FC = () => {
 
   return (
     <PageContainer
-      title="Quản lý thành viên"
-      content="Tài khoản nhân viên đang sử dụng hệ thống và vai trò được gán cho từng người."
+      title={t('Quản lý thành viên')}
+      content={t('Tài khoản nhân viên đang sử dụng hệ thống và vai trò được gán cho từng người.')}
     >
       <ProTable<API.UserListItem, API.UserQueryParams>
-        headerTitle="Danh sách thành viên"
+        headerTitle={t('Danh sách thành viên')}
         size={TABLE_SIZE}
         actionRef={actionRef}
         rowKey="id"
@@ -122,7 +125,7 @@ const UserList: React.FC = () => {
         pagination={{
           pageSize: 20,
           showSizeChanger: true,
-          showTotal: showTotal('thành viên'),
+          showTotal: showTotal(t('thành viên')),
         }}
         toolBarRender={() => [
           checkAccess.createUser && (
@@ -135,7 +138,7 @@ const UserList: React.FC = () => {
                 setFormVisible(true);
               }}
             >
-              Thêm mới
+              {t('Thêm mới')}
             </Button>
           ),
         ]}

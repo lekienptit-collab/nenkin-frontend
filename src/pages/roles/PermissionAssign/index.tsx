@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import access from '@/access';
 import { getGroupLabel, getPermissionLabel } from '@/constants/permissionLabel';
 import {
@@ -67,14 +68,14 @@ const PermissionAssignPage: React.FC = () => {
         getRoleToCustomPermission(selectedRoleId),
       ]);
       if (!roleRes?.id) {
-        message.error('Không tải được dữ liệu quyền.');
+        message.error(t('Không tải được dữ liệu quyền.'));
         history.push('/users/role');
         return;
       }
       setGroups(groupRes || {});
       setRole(roleRes);
     } catch (e) {
-      message.error('Không tải được dữ liệu quyền.');
+      message.error(t('Không tải được dữ liệu quyền.'));
       history.push('/users/role');
     } finally {
       setLoading(false);
@@ -151,7 +152,7 @@ const PermissionAssignPage: React.FC = () => {
   const handleSave = async () => {
     if (!selectedRoleId || !role) return;
     setSaving(true);
-    const hide = message.loading('Đang lưu...');
+    const hide = message.loading(t('Đang lưu...'));
     try {
       const perms = Array.from(checkedKeys).filter(canEditPermission);
       await updateRole(selectedRoleId, {
@@ -160,12 +161,14 @@ const PermissionAssignPage: React.FC = () => {
         permissions: perms,
       });
       hide();
-      message.success('Đã cập nhật phân quyền.');
+      message.success(t('Đã cập nhật phân quyền.'));
       await fetchData();
     } catch (error) {
       hide();
       const code = getErrorCode(error);
-      message.error(code === 'ROLE_NOT_FOUND' ? 'Không tìm thấy quyền.' : 'Cập nhật bị lỗi.');
+      message.error(
+      code === 'ROLE_NOT_FOUND' ? t('Không tìm thấy quyền.') : t('Cập nhật bị lỗi.'),
+    );
     } finally {
       setSaving(false);
     }
@@ -174,7 +177,7 @@ const PermissionAssignPage: React.FC = () => {
   if (!checkAccess.updateRolePermissions) {
     return (
       <PageContainer>
-        <Empty description="Bạn không có quyền phân quyền." />
+        <Empty description={t('Bạn không có quyền phân quyền.')} />
       </PageContainer>
     );
   }
@@ -186,32 +189,33 @@ const PermissionAssignPage: React.FC = () => {
       title={
         <Space size="middle">
           <SafetyCertificateOutlined style={{ fontSize: 22, color: '#1677ff' }} />
-          <span>Phân quyền chi tiết</span>
+          <span>{t('Phân quyền chi tiết')}</span>
           {role?.name && <Tag color="blue">{role.name}</Tag>}
         </Space>
       }
       extra={
         <Space>
           <Button icon={<ArrowLeftOutlined />} onClick={() => history.push('/users/role')}>
-            Quay lại danh sách
+            {t('Quay lại danh sách')}
           </Button>
           <Button type="primary" loading={saving} onClick={handleSave}>
-            Lưu phân quyền
+            {t('Lưu phân quyền')}
           </Button>
         </Space>
       }
     >
       {hasParentLimit && (
         <Card size="small" style={{ marginBottom: 16 }}>
-          Quyền này bị giới hạn bởi quyền cha — các permission ngoài phạm vi của quyền cha sẽ bị
-          khoá.
+          {t(
+            'Quyền này bị giới hạn bởi quyền cha — các permission ngoài phạm vi của quyền cha sẽ bị khoá.',
+          )}
         </Card>
       )}
 
       <Spin spinning={loading}>
         <div className="permission-assign-layout">
           <aside className="permission-assign-sidebar">
-            <div className="permission-assign-sidebar-subtitle">Nhóm quyền</div>
+            <div className="permission-assign-sidebar-subtitle">{t('Nhóm quyền')}</div>
             <Menu
               mode="inline"
               selectedKeys={activeGroupKey ? [activeGroupKey] : []}
@@ -221,7 +225,7 @@ const PermissionAssignPage: React.FC = () => {
           </aside>
 
           <section className="permission-assign-content">
-            {!activeGroupKey && !loading && <Empty description="Chưa có nhóm quyền nào." />}
+            {!activeGroupKey && !loading && <Empty description={t('Chưa có nhóm quyền nào.')} />}
 
             {activeGroupKey && (
               <Card
@@ -233,7 +237,7 @@ const PermissionAssignPage: React.FC = () => {
                     disabled={editableKeysInGroup.length === 0}
                     onChange={(e) => toggleGroupAll(e.target.checked)}
                   >
-                    Chọn tất cả
+                    {t('Chọn tất cả')}
                   </Checkbox>
                 }
               >
@@ -254,7 +258,7 @@ const PermissionAssignPage: React.FC = () => {
                         {editable ? (
                           checkbox
                         ) : (
-                          <Tooltip title="Bạn không có quyền này hoặc quyền cha không cho phép">
+                          <Tooltip title={t('Bạn không có quyền này hoặc quyền cha không cho phép')}>
                             {checkbox}
                           </Tooltip>
                         )}

@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import ImageUploader from '@/components/ImageUploader';
 import SegmentedInput from '@/components/SegmentedInput';
 import {
@@ -49,35 +50,35 @@ const Section: React.FC<{
 // ---------------------------------------------------------------- Cá nhân
 
 export const PersonalSection: React.FC<SectionProps> = () => (
-  <Section id="personal" title="Thông tin cá nhân - hộ chiếu">
+  <Section id="personal" title={t('Thông tin cá nhân - hộ chiếu')}>
     <Row gutter={16}>
       <Col {...twoCols}>
         <ProFormText
           name="name"
-          label="Họ và tên"
-          tooltip="Viết in hoa không dấu, đúng như trên hộ chiếu"
-          rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+          label={t('Họ và tên')}
+          tooltip={t('Viết in hoa không dấu, đúng như trên hộ chiếu')}
+          rules={[{ required: true, message: t('Vui lòng nhập họ và tên') }]}
         />
       </Col>
       <Col {...twoCols}>
         <ProFormRadio.Group
           name="gender"
-          label="Giới tính"
+          label={t('Giới tính')}
           options={[
             { label: 'Nam', value: GENDER.MALE },
-            { label: 'Nữ', value: GENDER.FEMALE },
+            { label: t('Nữ'), value: GENDER.FEMALE },
           ]}
         />
       </Col>
       <Col {...twoCols}>
         <ProFormDatePicker
           name="dateOfBirth"
-          label="Ngày tháng năm sinh"
+          label={t('Ngày tháng năm sinh')}
           fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
         />
       </Col>
       <Col {...twoCols}>
-        <Form.Item name="phoneNumber" label="Số điện thoại">
+        <Form.Item name="phoneNumber" label={t('Số điện thoại')}>
           <SegmentedInput
             segments={[4, 4, 4]}
             placeholders={['080', '8045', '0561']}
@@ -85,21 +86,21 @@ export const PersonalSection: React.FC<SectionProps> = () => (
         </Form.Item>
       </Col>
       <Col {...twoCols}>
-        <ProFormText name="country" label="Quốc tịch" />
+        <ProFormText name="country" label={t('Quốc tịch')} />
       </Col>
       <Col {...twoCols}>
         <ProFormDatePicker
           name="leaveJapanDate"
-          label="Ngày rời Nhật Bản"
+          label={t('Ngày rời Nhật Bản')}
           fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
         />
       </Col>
     </Row>
 
-    <Typography.Title level={5}>Ảnh hộ chiếu</Typography.Title>
+    <Typography.Title level={5}>{t('Ảnh hộ chiếu')}</Typography.Title>
     <Row gutter={16}>
       <Col xs={24} md={8}>
-        <Form.Item name="passportFirstPage" label="Trang đầu">
+        <Form.Item name="passportFirstPage" label={t('Trang đầu')}>
           <ImageUploader />
         </Form.Item>
       </Col>
@@ -109,7 +110,7 @@ export const PersonalSection: React.FC<SectionProps> = () => (
         </Form.Item>
       </Col>
       <Col xs={24} md={8}>
-        <Form.Item name="passportStampPage" label="Trang có dấu xuất cảnh">
+        <Form.Item name="passportStampPage" label={t('Trang có dấu xuất cảnh')}>
           <ImageUploader />
         </Form.Item>
       </Col>
@@ -133,7 +134,7 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
     if (!JP_POSTAL_CODE_PATTERN.test(postalCode || '')) {
       setLookupMessage({
         type: 'error',
-        text: 'Nhập đủ mã bưu điện dạng 123-4567 để tìm kiếm.',
+        text: t('Nhập đủ mã bưu điện dạng 123-4567 để tìm kiếm.'),
       });
       return;
     }
@@ -146,7 +147,7 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
       if (results.length === 0) {
         setLookupMessage({
           type: 'warning',
-          text: 'Không tìm thấy địa chỉ, vui lòng nhập tay.',
+          text: t('Không tìm thấy địa chỉ, vui lòng nhập tay.'),
         });
         return;
       }
@@ -157,7 +158,7 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
         form.setFieldValue('addressJpDistrict', results[0].district);
         setLookupMessage({
           type: 'success',
-          text: 'Đã tìm thấy địa chỉ, vui lòng nhập phần còn lại bằng tay.',
+          text: t('Đã tìm thấy địa chỉ, vui lòng nhập phần còn lại bằng tay.'),
         });
         return;
       }
@@ -167,12 +168,14 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
       form.setFieldValue('addressJpDistrict', results[0].district);
       setLookupMessage({
         type: 'warning',
-        text: `Có nhiều hơn một địa điểm có mã bưu điện ${postalCode}. Vui lòng chọn.`,
+        text: tv('Có nhiều hơn một địa điểm có mã bưu điện {code}. Vui lòng chọn.', {
+        code: postalCode,
+      }),
       });
     } catch (error) {
       setLookupMessage({
         type: 'error',
-        text: 'Không tra được địa chỉ lúc này, vui lòng nhập tay.',
+        text: t('Không tra được địa chỉ lúc này, vui lòng nhập tay.'),
       });
     } finally {
       setLookingUp(false);
@@ -180,13 +183,13 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
   };
 
   return (
-    <Section id="address" title="Thông tin địa chỉ">
-      <Typography.Title level={5}>Địa chỉ hiện tại (Việt Nam)</Typography.Title>
+    <Section id="address" title={t('Thông tin địa chỉ')}>
+      <Typography.Title level={5}>{t('Địa chỉ hiện tại (Việt Nam)')}</Typography.Title>
       <Row gutter={16}>
         <Col {...twoCols}>
           <ProFormSelect
             name="addressVnPrefectureCode"
-            label="Tỉnh"
+            label={t('Tỉnh')}
             showSearch
             options={master?.vnProvinces}
           />
@@ -194,41 +197,41 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
         <Col {...twoCols}>
           <ProFormText
             name="addressVnDistrict"
-            label="Thành phố/Huyện"
-            tooltip="Điền riêng tên thành phố hoặc huyện"
+            label={t('Thành phố/Huyện')}
+            tooltip={t('Điền riêng tên thành phố hoặc huyện')}
           />
         </Col>
         <Col {...twoCols}>
-          <ProFormText name="addressVnPostalCode" label="Mã bưu điện" />
+          <ProFormText name="addressVnPostalCode" label={t('Mã bưu điện')} />
         </Col>
         <Col {...twoCols}>
           <ProFormText
             name="addressVnAddress"
-            label="Địa chỉ đầy đủ"
-            tooltip="Tối đa 100 ký tự"
+            label={t('Địa chỉ đầy đủ')}
+            tooltip={t('Tối đa 100 ký tự')}
             fieldProps={{ maxLength: 100, showCount: true }}
           />
         </Col>
         <Col span={24}>
           <Form.Item
             name="leftProofUrl"
-            label="Giấy tờ chứng minh đã rời Nhật Bản"
-            tooltip="Ví dụ: bản sao giấy chứng nhận xoá hộ khẩu (住民票の除票の写し等). Nếu khi rời Nhật đã nộp thông báo thuyên chuyển tại cơ quan hành chính thành phố cư trú thì không cần đính kèm."
+            label={t('Giấy tờ chứng minh đã rời Nhật Bản')}
+            tooltip={t('Ví dụ: bản sao giấy chứng nhận xoá hộ khẩu (住民票の除票の写し等). Nếu khi rời Nhật đã nộp thông báo thuyên chuyển tại cơ quan hành chính thành phố cư trú thì không cần đính kèm.')}
           >
             <ImageUploader />
           </Form.Item>
         </Col>
       </Row>
 
-      <Typography.Title level={5}>Địa chỉ cuối cùng ở Nhật</Typography.Title>
+      <Typography.Title level={5}>{t('Địa chỉ cuối cùng ở Nhật')}</Typography.Title>
       <Row gutter={16}>
         <Col {...twoCols}>
           <Form.Item
-            label="Mã bưu điện"
+            label={t('Mã bưu điện')}
             rules={[
               {
                 pattern: JP_POSTAL_CODE_PATTERN,
-                message: 'Mã bưu điện phải có dạng 123-4567',
+                message: t('Mã bưu điện phải có dạng 123-4567'),
               },
             ]}
           >
@@ -241,7 +244,7 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
                 loading={lookingUp}
                 onClick={handleLookup}
               >
-                Tìm địa chỉ
+                {t('Tìm địa chỉ')}
               </Button>
             </Space>
           </Form.Item>
@@ -257,24 +260,24 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
         <Col {...twoCols}>
           <ProFormSelect
             name="addressJpPrefectureCode"
-            label="Tỉnh/Thành phố"
+            label={t('Tỉnh/Thành phố')}
             showSearch
             options={master?.jpPrefectures}
           />
         </Col>
         <Col {...twoCols}>
           {districtChoices.length > 0 ? (
-            <Form.Item name="addressJpDistrict" label="Xã/Phường/Thị trấn">
+            <Form.Item name="addressJpDistrict" label={t('Xã/Phường/Thị trấn')}>
               <Select
                 options={districtChoices.map((d) => ({ label: d, value: d }))}
               />
             </Form.Item>
           ) : (
-            <ProFormText name="addressJpDistrict" label="Xã/Phường/Thị trấn" />
+            <ProFormText name="addressJpDistrict" label={t('Xã/Phường/Thị trấn')} />
           )}
         </Col>
         <Col {...twoCols}>
-          <ProFormText name="addressJpHouseNumber" label="Đường phố/Số nhà" />
+          <ProFormText name="addressJpHouseNumber" label={t('Đường phố/Số nhà')} />
         </Col>
       </Row>
     </Section>
@@ -284,22 +287,22 @@ export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
 // ------------------------------------------------- Thẻ ngoại kiều / sổ Nenkin
 
 export const ResidenceSection: React.FC<SectionProps> = () => (
-  <Section id="residence" title="Thông tin thẻ ngoại kiều">
+  <Section id="residence" title={t('Thông tin thẻ ngoại kiều')}>
     <Row gutter={16}>
       <Col span={24}>
         <ProFormText
           name="occupation"
-          label="Nghề nghiệp ở Nhật Bản"
-          placeholder="ví dụ: 特定技能1号"
+          label={t('Nghề nghiệp ở Nhật Bản')}
+          placeholder={t('ví dụ: 特定技能1号')}
         />
       </Col>
       <Col xs={24} md={12}>
-        <Form.Item name="residenceCardFrontImage" label="Ảnh mặt trước">
+        <Form.Item name="residenceCardFrontImage" label={t('Ảnh mặt trước')}>
           <ImageUploader />
         </Form.Item>
       </Col>
       <Col xs={24} md={12}>
-        <Form.Item name="residenceCardBackImage" label="Ảnh mặt sau">
+        <Form.Item name="residenceCardBackImage" label={t('Ảnh mặt sau')}>
           <ImageUploader />
         </Form.Item>
       </Col>
@@ -308,16 +311,16 @@ export const ResidenceSection: React.FC<SectionProps> = () => (
 );
 
 export const NenkinBookSection: React.FC<SectionProps> = () => (
-  <Section id="nenkinBook" title="Thông tin sổ Nenkin">
+  <Section id="nenkinBook" title={t('Thông tin sổ Nenkin')}>
     <Row gutter={16}>
       <Col xs={24} md={12}>
         <Form.Item
           name="pensionNumber"
-          label="Mã số lương hưu cơ sở"
+          label={t('Mã số lương hưu cơ sở')}
           rules={[
             {
               pattern: PENSION_NUMBER_PATTERN,
-              message: 'Mã số phải có dạng 1234-123456',
+              message: t('Mã số phải có dạng 1234-123456'),
             },
           ]}
         >
@@ -327,12 +330,12 @@ export const NenkinBookSection: React.FC<SectionProps> = () => (
       <Col xs={24} md={12}>
         <ProFormText
           name="nameFurigana"
-          label="Họ và tên người lao động (Katakana)"
+          label={t('Họ và tên người lao động (Katakana)')}
           fieldProps={{ className: 'worker-name-furigana' }}
         />
       </Col>
       <Col xs={24} md={12}>
-        <Form.Item name="nenkinBookImage" label="Ảnh sổ Nenkin trang đầu">
+        <Form.Item name="nenkinBookImage" label={t('Ảnh sổ Nenkin trang đầu')}>
           <ImageUploader />
         </Form.Item>
       </Col>
@@ -340,7 +343,7 @@ export const NenkinBookSection: React.FC<SectionProps> = () => (
         <Form.Item
           name="insuranceLossImage"
           label={EXTRA_DOCUMENT_LABELS.insuranceLossImage}
-          tooltip="Giấy do công ty cấp khi cắt bảo hiểm. Ảnh này được ghép thành một trang trong bộ hồ sơ Nenkin lần 1."
+          tooltip={t('Giấy do công ty cấp khi cắt bảo hiểm. Ảnh này được ghép thành một trang trong bộ hồ sơ Nenkin lần 1.')}
         >
           <ImageUploader />
         </Form.Item>
@@ -389,12 +392,12 @@ export const BankSection: React.FC<SectionProps> = ({ form, master }) => {
   };
 
   return (
-    <Section id="bank" title="Thông tin tài khoản Ngân hàng">
+    <Section id="bank" title={t('Thông tin tài khoản Ngân hàng')}>
       <Row gutter={16}>
         <Col {...twoCols}>
           <ProFormSelect
             name="bankCountry"
-            label="Quốc gia"
+            label={t('Quốc gia')}
             options={BANK_COUNTRY_OPTIONS}
             fieldProps={{
               // Đổi quốc gia thì danh sách ngân hàng đổi theo, xoá lựa chọn cũ.
@@ -408,8 +411,8 @@ export const BankSection: React.FC<SectionProps> = ({ form, master }) => {
         </Col>
         <Col {...twoCols}>
           <Form.Item
-            label="Tên ngân hàng"
-            tooltip='Muốn tự điền tên ngân hàng thì chọn "Ngân hàng khác"'
+            label={t('Tên ngân hàng')}
+            tooltip={t('Muốn tự điền tên ngân hàng thì chọn "Ngân hàng khác"')}
           >
             <Select
               showSearch
@@ -417,45 +420,45 @@ export const BankSection: React.FC<SectionProps> = ({ form, master }) => {
               value={selectValue}
               disabled={!bankCountry}
               placeholder={
-                bankCountry ? 'Chọn ngân hàng' : 'Chọn quốc gia trước'
+                bankCountry ? t('Chọn ngân hàng') : t('Chọn quốc gia trước')
               }
               onChange={handleSelectBank}
               options={[
                 ...bankOptions.map((b) => ({ label: b.label, value: b.value })),
-                { label: 'Ngân hàng khác', value: OPTION_OTHERS },
+                { label: t('Ngân hàng khác'), value: OPTION_OTHERS },
               ]}
             />
           </Form.Item>
         </Col>
         {/* Luôn giữ trong form để submit; hiện ra khi tự nhập tên ngân hàng. */}
         <Col {...twoCols} style={isCustomBank ? undefined : { display: 'none' }}>
-          <ProFormText name="bankName" label="Tên ngân hàng (tự nhập)" />
+          <ProFormText name="bankName" label={t('Tên ngân hàng (tự nhập)')} />
         </Col>
         <Col {...twoCols}>
-          <ProFormText name="bankBranchName" label="Tên chi nhánh" />
+          <ProFormText name="bankBranchName" label={t('Tên chi nhánh')} />
         </Col>
         <Col {...twoCols}>
           <ProFormText
             name="bankSwiftCode"
-            label="Mã Swift (BIC)"
-            placeholder="ví dụ: VTCBVNVX"
-            tooltip="Mã SWIFT (BIC) gồm 8 hoặc 11 ký tự. Nếu nhận tiền vào tổ chức tài chính trong Nhật Bản thì không cần điền."
+            label={t('Mã Swift (BIC)')}
+            placeholder={t('ví dụ: VTCBVNVX')}
+            tooltip={t('Mã SWIFT (BIC) gồm 8 hoặc 11 ký tự. Nếu nhận tiền vào tổ chức tài chính trong Nhật Bản thì không cần điền.')}
           />
         </Col>
         <Col {...twoCols}>
           <ProFormText
             name="bankBranchAddress"
-            label="Địa chỉ chi nhánh"
-            tooltip="Nếu không có chi nhánh, hãy ghi địa chỉ của trụ sở chính."
+            label={t('Địa chỉ chi nhánh')}
+            tooltip={t('Nếu không có chi nhánh, hãy ghi địa chỉ của trụ sở chính.')}
           />
         </Col>
         <Col {...twoCols}>
           <ProFormText
             name="bankCity"
-            label="Thành phố/Huyện"
+            label={t('Thành phố/Huyện')}
             extra={
               <Typography.Link onClick={copyCityFromBranch}>
-                Sao chép từ địa chỉ chi nhánh
+                {t('Sao chép từ địa chỉ chi nhánh')}
               </Typography.Link>
             }
           />
@@ -463,10 +466,10 @@ export const BankSection: React.FC<SectionProps> = ({ form, master }) => {
         <Col {...twoCols}>
           <ProFormText
             name="bankAccountName"
-            label="Tên tài khoản"
+            label={t('Tên tài khoản')}
             extra={
               <Typography.Link onClick={copyNameFromWorker}>
-                Sao chép từ thông tin cá nhân
+                {t('Sao chép từ thông tin cá nhân')}
               </Typography.Link>
             }
           />
@@ -474,39 +477,39 @@ export const BankSection: React.FC<SectionProps> = ({ form, master }) => {
         <Col {...twoCols}>
           <ProFormText
             name="bankAccountNameFurigana"
-            label="Tên tài khoản (Katakana)"
-            tooltip="Dùng khi người lao động sử dụng tài khoản ngân hàng ở Nhật Bản"
+            label={t('Tên tài khoản (Katakana)')}
+            tooltip={t('Dùng khi người lao động sử dụng tài khoản ngân hàng ở Nhật Bản')}
           />
         </Col>
         <Col {...twoCols}>
           <ProFormText
             name="bankAccountNumber"
-            label="Số tài khoản"
-            placeholder="ví dụ: 0751000019382"
+            label={t('Số tài khoản')}
+            placeholder={t('ví dụ: 0751000019382')}
           />
         </Col>
         <Col {...twoCols}>
           <ProFormSelect
             name="bankAccountType"
-            label="Loại tài khoản"
-            options={(master?.bankAccountTypes || []).map((t) => ({
-              label: t.label,
-              value: Number(t.value),
+            label={t('Loại tài khoản')}
+            options={(master?.bankAccountTypes || []).map((o) => ({
+              label: t(o.label),
+              value: Number(o.value),
             }))}
-            tooltip="Dùng khi người lao động quay lại Nhật và tự nhận tiền hoàn thuế: bộ hồ sơ lần 2 khoanh 普通/当座/貯蓄 theo ô này."
+            tooltip={t('Dùng khi người lao động quay lại Nhật và tự nhận tiền hoàn thuế: bộ hồ sơ lần 2 khoanh 普通/当座/貯蓄 theo ô này.')}
           />
         </Col>
       </Row>
 
-      <Typography.Title level={5}>Ảnh giấy xác nhận tài khoản</Typography.Title>
+      <Typography.Title level={5}>{t('Ảnh giấy xác nhận tài khoản')}</Typography.Title>
       <Row gutter={16}>
         <Col xs={24} md={12}>
-          <Form.Item name="bankImage" label="Giấy xác nhận trang một">
+          <Form.Item name="bankImage" label={t('Giấy xác nhận trang một')}>
             <ImageUploader />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item name="bankImageBack" label="Giấy xác nhận trang hai (nếu có)">
+          <Form.Item name="bankImageBack" label={t('Giấy xác nhận trang hai (nếu có)')}>
             <ImageUploader />
           </Form.Item>
         </Col>
@@ -525,26 +528,29 @@ const yenProps = {
 };
 
 export const TaxSection: React.FC<SectionProps> = () => (
-  <Section id="tax" title="Thông tin thuế">
+  <Section id="tax" title={t('Thông tin thuế')}>
     <Row gutter={16}>
       <Col xs={24} md={8}>
+        {/* Mức miễn thuế là hằng số của Sở Thuế, không cho sửa tay để khỏi
+            nhập nhầm — giống hệ thống cũ. */}
         <ProFormDigit
           name="taxDeduct"
-          label="Số tiền được miễn đánh thuế"
-          fieldProps={yenProps}
+          label={t('Số tiền được miễn đánh thuế')}
+          fieldProps={{ ...yenProps, readOnly: true }}
+          tooltip={t('Mức miễn thuế cố định 1.200.000¥, hệ thống tự điền.')}
         />
       </Col>
       <Col xs={24} md={8}>
         <ProFormDigit
           name="taxAmount"
-          label="Số tiền thuế phải nộp"
+          label={t('Số tiền thuế phải nộp')}
           fieldProps={yenProps}
         />
       </Col>
       <Col xs={24} md={8}>
         <ProFormDigit
           name="netPension"
-          label="Số tiền bảo hiểm hưu trí thực lĩnh"
+          label={t('Số tiền bảo hiểm hưu trí thực lĩnh')}
           fieldProps={yenProps}
         />
       </Col>
@@ -553,7 +559,7 @@ export const TaxSection: React.FC<SectionProps> = () => (
 );
 
 export const InsuranceSection: React.FC<SectionProps> = () => (
-  <Section id="insurance" title="Quá trình tham gia chế độ lương hưu chung">
+  <Section id="insurance" title={t('Quá trình tham gia chế độ lương hưu chung')}>
     <Alert
       type="info"
       showIcon
@@ -561,12 +567,14 @@ export const InsuranceSection: React.FC<SectionProps> = () => (
       message={
         <>
           <div>
-            Nếu người lao động từng là thuyền viên, phần &quot;Tên cơ sở kinh
-            doanh&quot; ghi tên chủ sở hữu tàu và tên con tàu.
+            {t(
+              'Nếu người lao động từng là thuyền viên, phần "Tên cơ sở kinh doanh" ghi tên chủ sở hữu tàu và tên con tàu.',
+            )}
           </div>
           <div>
-            Thời gian tham gia bảo hiểm lương hưu quốc dân, chỉ cần ghi địa chỉ
-            nơi người lao động sinh sống.
+            {t(
+              'Thời gian tham gia bảo hiểm lương hưu quốc dân, chỉ cần ghi địa chỉ nơi người lao động sinh sống.',
+            )}
           </div>
         </>
       }
@@ -574,42 +582,42 @@ export const InsuranceSection: React.FC<SectionProps> = () => (
     <ProFormList
       name="insuranceHistories"
       max={MAX_INSURANCE_HISTORY}
-      creatorButtonProps={{ creatorButtonText: 'Thêm dòng' }}
+      creatorButtonProps={{ creatorButtonText: t('Thêm dòng') }}
       copyIconProps={false}
     >
       <Row gutter={16}>
         <Col xs={24} md={6}>
           <ProFormTextArea
             name="workPlace"
-            label="Tên cơ sở kinh doanh"
+            label={t('Tên cơ sở kinh doanh')}
             fieldProps={{ autoSize: { minRows: 1, maxRows: 3 } }}
           />
         </Col>
         <Col xs={24} md={6}>
           <ProFormTextArea
             name="address"
-            label="Địa chỉ"
+            label={t('Địa chỉ')}
             fieldProps={{ autoSize: { minRows: 1, maxRows: 3 } }}
           />
         </Col>
         <Col xs={24} md={4}>
           <ProFormDatePicker
             name="fromDate"
-            label="Làm việc từ ngày"
+            label={t('Làm việc từ ngày')}
             fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
           />
         </Col>
         <Col xs={24} md={4}>
           <ProFormDatePicker
             name="toDate"
-            label="Đến ngày"
+            label={t('Đến ngày')}
             fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
           />
         </Col>
         <Col xs={24} md={4}>
           <ProFormSelect
             name="pensionScheme"
-            label="Chế độ lương hưu"
+            label={t('Chế độ lương hưu')}
             options={PENSION_SCHEME_OPTIONS}
             initialValue={DEFAULT_PENSION_SCHEME}
           />
@@ -620,19 +628,19 @@ export const InsuranceSection: React.FC<SectionProps> = () => (
 );
 
 export const ResultSection: React.FC<SectionProps> = () => (
-  <Section id="result" title="Thông tin kết quả Nenkin">
+  <Section id="result" title={t('Thông tin kết quả Nenkin')}>
     <Row gutter={16}>
       <Col xs={24} md={12}>
         <ProFormDatePicker
           name="resultDate1"
-          label="Ngày có kết quả Nenkin lần 1"
+          label={t('Ngày có kết quả Nenkin lần 1')}
           fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
         />
       </Col>
       <Col xs={24} md={12}>
         <ProFormDatePicker
           name="resultDate2"
-          label="Ngày có kết quả Nenkin lần 2"
+          label={t('Ngày có kết quả Nenkin lần 2')}
           fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
         />
       </Col>

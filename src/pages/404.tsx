@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import ExceptionCard from '@/components/ExceptionCard';
 import { HomeOutlined, LeftOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
@@ -7,15 +8,15 @@ import React from 'react';
 const NoFoundPage: React.FC = () => (
   <ExceptionCard
     code="404"
-    title="Không tìm thấy trang"
-    description="Đường dẫn bạn vừa mở không tồn tại hoặc đã được đổi sang địa chỉ khác."
+    title={t('Không tìm thấy trang')}
+    description={t('Đường dẫn bạn vừa mở không tồn tại hoặc đã được đổi sang địa chỉ khác.')}
   >
     <Space wrap>
       <Button type="primary" icon={<HomeOutlined />} onClick={() => history.push('/')}>
-        Về trang chủ
+        {t('Về trang chủ')}
       </Button>
       <Button icon={<LeftOutlined />} onClick={() => history.back()}>
-        Quay lại
+        {t('Quay lại')}
       </Button>
     </Space>
   </ExceptionCard>

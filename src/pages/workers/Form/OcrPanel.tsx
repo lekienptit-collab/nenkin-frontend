@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import {
   BANK_COUNTRY_OPTIONS,
   GENDER_LABELS,
@@ -47,7 +48,7 @@ type Suggestion = {
 
 const ERROR_MESSAGES: Record<string, string> = {
   ...OCR_ERROR_LABELS,
-  OCR_NO_DOCUMENT: 'Chưa có ảnh giấy tờ nào để đọc.',
+  OCR_NO_DOCUMENT: t('Chưa có ảnh giấy tờ nào để đọc.'),
 };
 
 /** Đổi giá trị thô thành chữ để người dùng đối chiếu trước khi áp dụng. */
@@ -141,7 +142,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
   ): Promise<API.OcrExtractResult | undefined> => {
     if (documents.length === 0) {
       if (!auto) {
-        message.warning('Hãy tải ảnh giấy tờ lên trước, rồi bấm đọc lại.');
+        message.warning(t('Hãy tải ảnh giấy tờ lên trước, rồi bấm đọc lại.'));
       }
       return undefined;
     }
@@ -150,7 +151,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
       return await extractWorkerDocuments(documents);
     } catch (error) {
       const code = getErrorCode(error);
-      message.error(ERROR_MESSAGES[code] || 'Đọc ảnh bị lỗi. Xin thử lại!');
+      message.error(ERROR_MESSAGES[code] || t('Đọc ảnh bị lỗi. Xin thử lại!'));
       return undefined;
     } finally {
       setRunning(false);
@@ -223,7 +224,10 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
       if (empty.length > 0) {
         form.setFieldsValue(Object.fromEntries(empty));
         message.success(
-          `Đã đọc ${changed.map((c) => c.label).join(', ')} và điền ${empty.length} ô.`,
+          tv('Đã đọc {docs} và điền {n} ô.', {
+            docs: changed.map((c) => c.label).join(', '),
+            n: empty.length,
+          }),
         );
       }
       if (conflicting.length > 0) {
@@ -232,7 +236,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
         setResult({ ...res, fields: Object.fromEntries(conflicting) });
         setChecked(new Set());
       } else if (empty.length === 0) {
-        message.info('Ảnh mới không có thông tin nào khác với hồ sơ hiện tại.');
+        message.info(t('Ảnh mới không có thông tin nào khác với hồ sơ hiện tại.'));
       }
     })();
 
@@ -249,7 +253,9 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
       .reduce((acc, s) => ({ ...acc, [s.field]: s.suggested }), {});
 
     form.setFieldsValue(values);
-    message.success(`Đã điền ${Object.keys(values).length} ô từ ảnh giấy tờ.`);
+    message.success(
+      tv('Đã điền {n} ô từ ảnh giấy tờ.', { n: Object.keys(values).length }),
+    );
     setResult(undefined);
   };
 
@@ -273,7 +279,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
         title={
           <Space>
             <RobotOutlined />
-            Đọc thông tin từ ảnh giấy tờ
+            {t('Đọc thông tin từ ảnh giấy tờ')}
           </Space>
         }
         bordered
@@ -283,8 +289,8 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
             <Switch
               checked={autoRead}
               onChange={setAutoRead}
-              checkedChildren="Tự đọc"
-              unCheckedChildren="Tắt"
+              checkedChildren={t('Tự đọc')}
+              unCheckedChildren={t('Tắt')}
             />
             <Button
               type="primary"
@@ -292,16 +298,15 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
               loading={running}
               onClick={handleRun}
             >
-              Đọc lại tất cả ảnh
+              {t('Đọc lại tất cả ảnh')}
             </Button>
           </Space>
         }
       >
         <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-          Tải ảnh hộ chiếu, thẻ ngoại kiều, sổ Nenkin, giấy xác nhận ngân hàng vào
-          các ô bên dưới — hệ thống <strong>tự đọc ngay</strong> và điền các ô còn
-          trống. Ô nào bạn đã nhập tay mà ảnh đọc ra khác thì sẽ hỏi lại chứ không
-          tự ghi đè.
+          {t(
+            'Tải ảnh hộ chiếu, thẻ ngoại kiều, sổ Nenkin, giấy xác nhận ngân hàng vào các ô bên dưới — hệ thống tự đọc ngay và điền các ô còn trống. Ô nào bạn đã nhập tay mà ảnh đọc ra khác thì sẽ hỏi lại chứ không tự ghi đè.',
+          )}
         </Typography.Paragraph>
       </ProCard>
 
@@ -309,13 +314,13 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
         open={!!result}
         title={
           onlyConflicts
-            ? 'Thông tin trên ảnh khác với hồ sơ hiện tại'
-            : 'Kết quả đọc từ ảnh giấy tờ'
+            ? t('Thông tin trên ảnh khác với hồ sơ hiện tại')
+            : t('Kết quả đọc từ ảnh giấy tờ')
         }
         width={820}
-        okText={`Điền ${checked.size} ô đã chọn`}
+        okText={tv('Điền {n} ô đã chọn', { n: checked.size })}
         okButtonProps={{ disabled: checked.size === 0 }}
-        cancelText="Bỏ qua"
+        cancelText={t('Bỏ qua')}
         onOk={handleApply}
         onCancel={() => setResult(undefined)}
         destroyOnClose
@@ -325,13 +330,13 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
             type="warning"
             showIcon
             style={{ marginBottom: 16 }}
-            message="Có ảnh chưa đọc được"
+            message={t('Có ảnh chưa đọc được')}
             description={
               <ul style={{ margin: 0, paddingLeft: 18 }}>
                 {failed.map((f) => (
                   <li key={f.type}>
                     {f.label}:{' '}
-                    {OCR_ERROR_LABELS[f.errorCode || ''] || 'Không đọc được'}
+                    {OCR_ERROR_LABELS[f.errorCode || ''] || t('Không đọc được')}
                   </li>
                 ))}
               </ul>
@@ -344,12 +349,12 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
-            message="Các ô dưới đây đã có dữ liệu trên hồ sơ. Tích ô nào bạn muốn thay bằng thông tin đọc từ ảnh mới."
+            message={t('Các ô dưới đây đã có dữ liệu trên hồ sơ. Tích ô nào bạn muốn thay bằng thông tin đọc từ ảnh mới.')}
           />
         )}
 
         {suggestions.length === 0 ? (
-          <Empty description="Không đọc được thông tin nào từ ảnh" />
+          <Empty description={t('Không đọc được thông tin nào từ ảnh')} />
         ) : (
           <Table<Suggestion>
             size="small"
@@ -367,21 +372,21 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
                   />
                 ),
               },
-              { title: 'Thông tin', dataIndex: 'label', width: 240 },
+              { title: t('Thông tin'), dataIndex: 'label', width: 240 },
               {
-                title: 'Đang có trên form',
+                title: t('Đang có trên form'),
                 dataIndex: 'current',
                 render: (value) =>
-                  value || <Typography.Text type="secondary">(trống)</Typography.Text>,
+                  value || <Typography.Text type="secondary">{t('(trống)')}</Typography.Text>,
               },
               {
-                title: 'AI đọc được',
+                title: t('AI đọc được'),
                 dataIndex: 'suggestedText',
                 render: (value, record) => (
                   <Space>
                     <strong>{value}</strong>
                     {record.current && record.current !== value && (
-                      <Tag color="warning">ghi đè</Tag>
+                      <Tag color="warning">{t('ghi đè')}</Tag>
                     )}
                   </Space>
                 ),

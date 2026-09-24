@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import access from '@/access';
 import { SERVICE_TYPE, SERVICE_TYPE_LABELS } from '@/constants/nenkin';
 import { nenkinPaperTemplates } from '@/services/nenkin/nenkinService';
@@ -39,22 +40,22 @@ const NenkinServicePage: React.FC = () => {
 
         <div className={styles.body}>
           <div className={styles.listLabel}>
-            Bộ giấy tờ sẽ được tạo
+            {t('Bộ giấy tờ sẽ được tạo')}
             {!loading && papers.length > 0 && <span className={styles.count}>{papers.length}</span>}
           </div>
 
           {loading ? (
             <Skeleton active paragraph={{ rows: 4 }} title={false} />
           ) : papers.length === 0 ? (
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Chưa có mẫu giấy tờ" />
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('Chưa có mẫu giấy tờ')} />
           ) : (
             <ul className={styles.papers}>
               {papers.map((item, index) => (
                 <li key={item.code}>
                   <span className={styles.paperIndex}>{index + 1}</span>
                   <FilePdfOutlined className={styles.paperIcon} />
-                  <span className={styles.paperName}>{item.name}</span>
-                  {item.scanned && <Tag color="blue">bản scan</Tag>}
+                  <span className={styles.paperName}>{t(item.name)}</span>
+                  {item.scanned && <Tag color="blue">{t('bản scan')}</Tag>}
                   <code className={styles.paperCode}>{item.code}</code>
                 </li>
               ))}
@@ -75,7 +76,7 @@ const NenkinServicePage: React.FC = () => {
             </Button>
           ) : (
             <Button size="large" block disabled icon={<LockOutlined />}>
-              Bạn không có quyền tạo hồ sơ
+              {t('Bạn không có quyền tạo hồ sơ')}
             </Button>
           )}
         </div>
@@ -85,23 +86,23 @@ const NenkinServicePage: React.FC = () => {
 
   return (
     <PageContainer
-      title="Thủ tục Nenkin"
-      content="Chọn lần thủ tục cần làm, hệ thống sẽ ghi nhận hồ sơ và sinh bộ giấy tờ tương ứng cho người lao động."
+      title={t('Thủ tục Nenkin')}
+      content={t('Chọn lần thủ tục cần làm, hệ thống sẽ ghi nhận hồ sơ và sinh bộ giấy tờ tương ứng cho người lao động.')}
     >
       <Row gutter={[20, 20]}>
         <Col xs={24} xl={12}>
           {renderCard(SERVICE_TYPE.FIRST, {
             tone: styles.toneBlue,
-            note: 'Hoàn tiền bảo hiểm hưu trí sau khi người lao động đã rời Nhật Bản.',
-            action: 'Làm thủ tục lần một',
+            note: t('Hoàn tiền bảo hiểm hưu trí sau khi người lao động đã rời Nhật Bản.'),
+            action: t('Làm thủ tục lần một'),
           })}
         </Col>
         <Col xs={24} xl={12}>
           {renderCard(SERVICE_TYPE.SECOND, {
             tone: styles.toneViolet,
             button: styles.buttonViolet,
-            note: 'Hoàn lại phần thuế đã khấu trừ, làm sau khi đã có kết quả lần một.',
-            action: 'Làm thủ tục lần hai',
+            note: t('Hoàn lại phần thuế đã khấu trừ, làm sau khi đã có kết quả lần một.'),
+            action: t('Làm thủ tục lần hai'),
           })}
         </Col>
       </Row>

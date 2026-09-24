@@ -1,3 +1,4 @@
+import { t, tv } from '@/utils/t';
 import { NENKIN_RESULT, SERVICE_TYPE } from '@/constants/nenkin';
 import { DatePicker, Form, Modal, Radio, Typography } from 'antd';
 import { toApiDate } from '@/utils/date';
@@ -44,13 +45,13 @@ const NenkinResultModal: React.FC<NenkinResultModalProps> = ({
         <div>
           <div>{worker?.name}</div>
           <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-            Thay đổi trạng thái hồ sơ và ngày trả kết quả Nenkin lần{' '}
+            {t('Thay đổi trạng thái hồ sơ và ngày trả kết quả Nenkin lần')}{' '}
             {isFirst ? 1 : 2}
           </Typography.Text>
         </div>
       }
-      okText="Lưu thay đổi"
-      cancelText="Huỷ"
+      okText={t('Lưu thay đổi')}
+      cancelText={t('Huỷ')}
       onCancel={onCancel}
       onOk={() => form.submit()}
       destroyOnClose
@@ -69,17 +70,20 @@ const NenkinResultModal: React.FC<NenkinResultModalProps> = ({
           });
         }}
       >
-        <Form.Item name="result" label={`Hồ sơ Nenkin lần ${isFirst ? 1 : 2}`}>
+        <Form.Item
+          name="result"
+          label={tv('Hồ sơ Nenkin lần {n}', { n: isFirst ? 1 : 2 })}
+        >
           <Radio.Group>
-            <Radio value={NENKIN_RESULT.RETURNED}>Đã trả kết quả</Radio>
-            <Radio value={NENKIN_RESULT.NOT_YET}>Chưa nộp/chưa trả kết quả</Radio>
+            <Radio value={NENKIN_RESULT.RETURNED}>{t('Đã trả kết quả')}</Radio>
+            <Radio value={NENKIN_RESULT.NOT_YET}>{t('Chưa nộp/chưa trả kết quả')}</Radio>
           </Radio.Group>
         </Form.Item>
         {result === NENKIN_RESULT.RETURNED && (
           <Form.Item
             name="resultDate"
-            label="Ngày trả kết quả"
-            rules={[{ required: true, message: 'Vui lòng chọn ngày trả kết quả' }]}
+            label={t('Ngày trả kết quả')}
+            rules={[{ required: true, message: t('Vui lòng chọn ngày trả kết quả') }]}
           >
             <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
           </Form.Item>

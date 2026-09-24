@@ -1,3 +1,4 @@
+import { t } from '@/utils/t';
 import { getRoles } from '@/services/nenkin/role';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -13,12 +14,12 @@ export const configColumns = (pa: {
 }): ProColumns<API.UserListItem>[] => {
   return [
     {
-      title: 'Tên đăng nhập',
+      title: t('Tên đăng nhập'),
       dataIndex: 'username',
       render: (_, record) => <strong>{record.username}</strong>,
     },
     {
-      title: 'Họ tên',
+      title: t('Họ tên'),
       dataIndex: 'fullname',
       render: (_, record) => record.fullname || '-',
     },
@@ -27,12 +28,12 @@ export const configColumns = (pa: {
       dataIndex: 'email',
     },
     {
-      title: 'Điện thoại',
+      title: t('Điện thoại'),
       dataIndex: 'phone',
       render: (_, record) => record.phone || '-',
     },
     {
-      title: 'Vai trò',
+      title: t('Vai trò'),
       dataIndex: 'roleId',
       valueType: 'select',
       request: async () => {
@@ -42,12 +43,12 @@ export const configColumns = (pa: {
       render: (_, record) => record.role?.name || '-',
     },
     {
-      title: 'Trạng thái',
+      title: t('Trạng thái'),
       dataIndex: 'isActive',
       valueType: 'select',
       valueEnum: {
-        true: { text: 'Đang hoạt động', status: 'Success' },
-        false: { text: 'Đã khoá', status: 'Default' },
+        true: { text: t('Đang hoạt động'), status: 'Success' },
+        false: { text: t('Đã khoá'), status: 'Default' },
       },
       render: (_, record) => {
         const isSelf = record.id === pa.currentUserId;
@@ -55,7 +56,7 @@ export const configColumns = (pa: {
           return (
             <Badge
               status={record.isActive ? 'success' : 'default'}
-              text={record.isActive ? 'Đang hoạt động' : 'Đã khoá'}
+              text={record.isActive ? t('Đang hoạt động') : t('Đã khoá')}
             />
           );
         }
@@ -63,22 +64,22 @@ export const configColumns = (pa: {
           <Switch
             size="small"
             checked={record.isActive}
-            checkedChildren="Bật"
-            unCheckedChildren="Khoá"
+            checkedChildren={t('Bật')}
+            unCheckedChildren={t('Khoá')}
             onChange={(checked) => pa.onToggleActive(record, checked)}
           />
         );
       },
     },
     {
-      title: 'Ngày tạo',
+      title: t('Ngày tạo'),
       dataIndex: 'createAt',
       valueType: 'dateTime',
       search: false,
       sorter: false,
     },
     {
-      title: 'Thao tác',
+      title: t('Thao tác'),
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
@@ -87,7 +88,7 @@ export const configColumns = (pa: {
           <Space key="actions">
             {pa.checkAccess.updateUser && (
               <a key="update" onClick={() => pa.onUpdate(record)}>
-                Sửa
+                {t('Sửa')}
               </a>
             )}
             {pa.checkAccess.deleteUser && !isSelf && (
@@ -99,7 +100,7 @@ export const configColumns = (pa: {
                 icon={<DeleteOutlined />}
                 onClick={() => pa.onDelete(record)}
               >
-                Xoá
+                {t('Xoá')}
               </Button>
             )}
           </Space>

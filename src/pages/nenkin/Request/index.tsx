@@ -1,3 +1,4 @@
+import { t, tv, tOptions } from '@/utils/t';
 import {
   CASE_TYPE,
   CASE_TYPE_OPTIONS,
@@ -26,11 +27,11 @@ import React, { useEffect } from 'react';
 import { useFetch } from '@/utils/useFetch';
 
 const ERROR_MESSAGES: Record<string, string> = {
-  WORKER_NOT_FOUND: 'Không tìm thấy người lao động.',
-  AGENT_NOT_FOUND: 'Không tìm thấy người đại diện.',
+  WORKER_NOT_FOUND: t('Không tìm thấy người lao động.'),
+  AGENT_NOT_FOUND: t('Không tìm thấy người đại diện.'),
   NENKIN_FIRST_REQUIRED:
-    'Người lao động chưa làm thủ tục lần 1, không thể làm thủ tục lần 2.',
-  ValidationError: 'Dữ liệu chưa hợp lệ, vui lòng kiểm tra lại các ô đã nhập.',
+    t('Người lao động chưa làm thủ tục lần 1, không thể làm thủ tục lần 2.'),
+  ValidationError: t('Dữ liệu chưa hợp lệ, vui lòng kiểm tra lại các ô đã nhập.'),
 };
 
 const showError = (error: any, fallback: string) => {
@@ -95,16 +96,16 @@ const NenkinRequest: React.FC = () => {
       const result = await saveNenkinProcedure(payload);
       if (result?.missingFields?.length) {
         message.warning(
-          `Đã tạo hồ sơ, nhưng người lao động còn thiếu: ${result.missingFields
-            .map((m) => m.label)
-            .join(', ')}.`,
+          tv('Đã tạo hồ sơ, nhưng người lao động còn thiếu: {fields}.', {
+            fields: result.missingFields.map((m) => t(m.label)).join(', '),
+          }),
         );
       } else {
-        message.success('Đã tạo hồ sơ thành công.');
+        message.success(t('Đã tạo hồ sơ thành công.'));
       }
       history.push(`/workers/${payload.workerId}`);
     } catch (error) {
-      showError(error, 'Tạo hồ sơ bị lỗi. Xin thử lại!');
+      showError(error, t('Tạo hồ sơ bị lỗi. Xin thử lại!'));
     }
   };
 
@@ -125,9 +126,9 @@ const NenkinRequest: React.FC = () => {
           <ProCard bordered style={{ marginBottom: 16 }}>
             <ProFormSelect
               name="workerId"
-              label="Chọn người lao động"
+              label={t('Chọn người lao động')}
               showSearch
-              rules={[{ required: true, message: 'Hãy chọn người lao động' }]}
+              rules={[{ required: true, message: t('Hãy chọn người lao động') }]}
               debounceTime={300}
               request={async ({ keyWords }) => {
                 const res = await searchWorkers(keyWords);
@@ -143,21 +144,21 @@ const NenkinRequest: React.FC = () => {
             {!isFirst && (
               <ProFormSelect
                 name="caseType"
-                label="Trường hợp của người lao động"
+                label={t('Trường hợp của người lao động')}
                 options={CASE_TYPE_OPTIONS}
                 allowClear={false}
-                tooltip="Người quay lại Nhật tự khai thuế nên không cần người đại diện nộp thuế, và bộ hồ sơ bỏ tờ 所得税・消費税の納税管理人の届出書."
-                rules={[{ required: true, message: 'Hãy chọn trường hợp' }]}
+                tooltip={t('Người quay lại Nhật tự khai thuế nên không cần người đại diện nộp thuế, và bộ hồ sơ bỏ tờ 所得税・消費税の納税管理人の届出書.')}
+                rules={[{ required: true, message: t('Hãy chọn trường hợp') }]}
               />
             )}
 
             {needsAgent && (
               <ProFormSelect
                 name="agentId"
-                label="Chọn người được uỷ quyền"
+                label={t('Chọn người được uỷ quyền')}
                 showSearch
                 rules={[
-                  { required: true, message: 'Hãy chọn người được uỷ quyền' },
+                  { required: true, message: t('Hãy chọn người được uỷ quyền') },
                 ]}
                 debounceTime={300}
                 request={async ({ keyWords }) => {
@@ -173,17 +174,17 @@ const NenkinRequest: React.FC = () => {
             {needsAgent && (
               <ProFormSelect
                 name="relationOption"
-                label="Quan hệ với người được uỷ quyền"
-                options={master?.agentRelations}
-                rules={[{ required: true, message: 'Hãy chọn quan hệ' }]}
+                label={t('Quan hệ với người được uỷ quyền')}
+                options={tOptions(master?.agentRelations)}
+                rules={[{ required: true, message: t('Hãy chọn quan hệ') }]}
               />
             )}
             {needsAgent && relation === OPTION_OTHERS && (
               <ProFormText
                 name="relationCustom"
-                label="Quan hệ (tự nhập)"
-                placeholder="Vui lòng ghi cụ thể"
-                rules={[{ required: true, message: 'Hãy ghi rõ quan hệ' }]}
+                label={t('Quan hệ (tự nhập)')}
+                placeholder={t('Vui lòng ghi cụ thể')}
+                rules={[{ required: true, message: t('Hãy ghi rõ quan hệ') }]}
               />
             )}
             {!needsAgent && (
@@ -191,7 +192,7 @@ const NenkinRequest: React.FC = () => {
                 type="info"
                 showIcon
                 style={{ marginBottom: 16 }}
-                message="Người lao động quay lại Nhật nên tự khai thuế: không cần người đại diện và bộ hồ sơ bỏ tờ 所得税・消費税の納税管理人の届出書."
+                message={t('Người lao động quay lại Nhật nên tự khai thuế: không cần người đại diện và bộ hồ sơ bỏ tờ 所得税・消費税の納税管理人の届出書.')}
               />
             )}
 
@@ -199,16 +200,16 @@ const NenkinRequest: React.FC = () => {
               <>
                 <ProFormDatePicker
                   name="requestDate"
-                  label="Ngày làm đơn"
-                  tooltip="Ngày làm đơn phải sau ngày về nước"
+                  label={t('Ngày làm đơn')}
+                  tooltip={t('Ngày làm đơn phải sau ngày về nước')}
                   fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
-                  rules={[{ required: true, message: 'Hãy chọn ngày làm đơn' }]}
+                  rules={[{ required: true, message: t('Hãy chọn ngày làm đơn') }]}
                 />
                 <ProFormDatePicker
                   name="entrustDate"
-                  label="Ngày uỷ quyền"
+                  label={t('Ngày uỷ quyền')}
                   fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
-                  rules={[{ required: true, message: 'Hãy chọn ngày uỷ quyền' }]}
+                  rules={[{ required: true, message: t('Hãy chọn ngày uỷ quyền') }]}
                 />
               </>
             ) : (
@@ -217,33 +218,33 @@ const NenkinRequest: React.FC = () => {
                   type="info"
                   showIcon
                   style={{ marginBottom: 16 }}
-                  message="Thủ tục lần 2 chỉ làm được sau khi đã làm thủ tục lần 1."
+                  message={t('Thủ tục lần 2 chỉ làm được sau khi đã làm thủ tục lần 1.')}
                 />
                 <ProFormDatePicker
                   name="resultDate1"
-                  label="Ngày có kết quả Nenkin lần 1"
-                  tooltip="Nhập ở đây sẽ cập nhật luôn vào hồ sơ người lao động"
+                  label={t('Ngày có kết quả Nenkin lần 1')}
+                  tooltip={t('Nhập ở đây sẽ cập nhật luôn vào hồ sơ người lao động')}
                   fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
                 />
                 <ProFormDatePicker
                   name="taxRequestDate"
-                  label="Ngày làm đơn khai thuế"
+                  label={t('Ngày làm đơn khai thuế')}
                   fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
-                  rules={[{ required: true, message: 'Hãy chọn ngày làm đơn khai thuế' }]}
+                  rules={[{ required: true, message: t('Hãy chọn ngày làm đơn khai thuế') }]}
                 />
                 <ProFormDatePicker
                   name="taxEntrustDate"
-                  label="Ngày uỷ quyền khai thuế"
+                  label={t('Ngày uỷ quyền khai thuế')}
                   fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
                   rules={[
-                    { required: true, message: 'Hãy chọn ngày uỷ quyền khai thuế' },
+                    { required: true, message: t('Hãy chọn ngày uỷ quyền khai thuế') },
                   ]}
                 />
                 <ProFormText
                   name="taxOffice"
-                  label="Văn phòng thuế"
-                  placeholder="ví dụ: 真岡税務署"
-                  tooltip="Văn phòng thuế phụ trách địa chỉ cuối cùng ở Nhật của người lao động"
+                  label={t('Văn phòng thuế')}
+                  placeholder={t('ví dụ: 真岡税務署')}
+                  tooltip={t('Văn phòng thuế phụ trách địa chỉ cuối cùng ở Nhật của người lao động')}
                 />
               </>
             )}
@@ -251,9 +252,9 @@ const NenkinRequest: React.FC = () => {
 
           <Card>
             <Space>
-              <Button onClick={() => history.push('/nenkin')}>Huỷ bỏ</Button>
+              <Button onClick={() => history.push('/nenkin')}>{t('Huỷ bỏ')}</Button>
               <Button type="primary" onClick={() => form.submit()}>
-                Tạo hồ sơ
+                {t('Tạo hồ sơ')}
               </Button>
             </Space>
           </Card>

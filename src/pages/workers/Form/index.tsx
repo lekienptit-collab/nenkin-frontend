@@ -1,4 +1,5 @@
-import { DEFAULT_PENSION_SCHEME, WORKER_SECTIONS } from '@/constants/nenkin';
+import { t, tv } from '@/utils/t';
+import { DEFAULT_PENSION_SCHEME, TAX_DEDUCT_FIXED, WORKER_SECTIONS } from '@/constants/nenkin';
 import { masterData as queryMasterData } from '@/services/nenkin/masterData';
 import { addWorker, getWorker, updateWorker } from '@/services/nenkin/worker';
 import { toApiDate, toApiDates } from '@/utils/date';
@@ -21,8 +22,8 @@ import {
 } from './sections';
 
 const ERROR_MESSAGES: Record<string, string> = {
-  WORKER_NOT_FOUND: 'Không tìm thấy người lao động.',
-  ValidationError: 'Dữ liệu chưa hợp lệ, vui lòng kiểm tra lại các ô đã nhập.',
+  WORKER_NOT_FOUND: t('Không tìm thấy người lao động.'),
+  ValidationError: t('Dữ liệu chưa hợp lệ, vui lòng kiểm tra lại các ô đã nhập.'),
 };
 
 const showError = (error: any, fallback: string) => {
@@ -75,6 +76,7 @@ const WorkerForm: React.FC = () => {
     if (!isUpdate) {
       form.setFieldsValue({
         country: 'Việt Nam',
+        taxDeduct: TAX_DEDUCT_FIXED,
         insuranceHistories: [{ pensionScheme: DEFAULT_PENSION_SCHEME }],
       });
       return;
@@ -82,6 +84,8 @@ const WorkerForm: React.FC = () => {
     if (!worker) return;
     form.setFieldsValue({
       ...worker,
+      // Hồ sơ cũ có thể chưa có mức miễn thuế; điền bù cho đủ.
+      taxDeduct: worker.taxDeduct ?? TAX_DEDUCT_FIXED,
       insuranceHistories: worker.insuranceHistories?.length
         ? worker.insuranceHistories
         : [{ pensionScheme: DEFAULT_PENSION_SCHEME }],
@@ -93,15 +97,15 @@ const WorkerForm: React.FC = () => {
     try {
       if (isUpdate) {
         await updateWorker(workerId!, payload);
-        message.success('Đã cập nhật thành công.');
+        message.success(t('Đã cập nhật thành công.'));
         history.push(`/workers/${workerId}`);
       } else {
         const created = await addWorker(payload);
-        message.success('Thêm mới thành công!');
+        message.success(t('Thêm mới thành công!'));
         history.push(`/workers/${created.id}`);
       }
     } catch (error) {
-      showError(error, 'Lưu thông tin bị lỗi. Xin thử lại!');
+      showError(error, t('Lưu thông tin bị lỗi. Xin thử lại!'));
     }
   };
 
@@ -109,7 +113,11 @@ const WorkerForm: React.FC = () => {
 
   return (
     <PageContainer
-      title={isUpdate ? `Sửa thông tin: ${worker?.name || ''}` : 'Thêm người lao động'}
+      title={
+        isUpdate
+          ? tv('Sửa thông tin: {name}', { name: worker?.name || '' })
+          : t('Thêm người lao động')
+      }
       onBack={() => history.back()}
     >
       <Spin spinning={loading}>
@@ -136,9 +144,9 @@ const WorkerForm: React.FC = () => {
 
               <Card>
                 <Space>
-                  <Button onClick={() => history.back()}>Quay lại</Button>
+                  <Button onClick={() => history.back()}>{t('Quay lại')}</Button>
                   <Button type="primary" onClick={() => form.submit()}>
-                    Lưu
+                    {t('Lưu')}
                   </Button>
                 </Space>
               </Card>
@@ -147,7 +155,7 @@ const WorkerForm: React.FC = () => {
             <Col xs={0} lg={6}>
               {/* Header dang o che do fixed (cao 56px) nen phai chua khoang trong. */}
               <Affix offsetTop={80}>
-                <Card size="small" title="Nội dung biểu mẫu">
+                <Card size="small" title={t('Nội dung biểu mẫu')}>
                   <Anchor
                     affix={false}
                     offsetTop={100}
