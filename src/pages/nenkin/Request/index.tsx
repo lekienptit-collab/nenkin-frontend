@@ -1,4 +1,10 @@
-import { OPTION_OTHERS, SERVICE_TYPE, SERVICE_TYPE_LABELS } from '@/constants/nenkin';
+import {
+  CASE_TYPE,
+  CASE_TYPE_OPTIONS,
+  OPTION_OTHERS,
+  SERVICE_TYPE,
+  SERVICE_TYPE_LABELS,
+} from '@/constants/nenkin';
 import { searchAgents } from '@/services/nenkin/agent';
 import { masterData as queryMasterData } from '@/services/nenkin/masterData';
 import { saveNenkinProcedure } from '@/services/nenkin/nenkinService';
@@ -44,10 +50,14 @@ const NenkinRequest: React.FC = () => {
 
   const [form] = Form.useForm();
   const relation = Form.useWatch('relationOption', form);
+  const caseType = Form.useWatch('caseType', form);
+  // Người quay lại Nhật tự khai thuế nên không cần người đại diện nộp thuế.
+  const needsAgent = caseType !== CASE_TYPE.RETURN_JAPAN;
   const { data: master } = useFetch<API.MasterData>(() => queryMasterData());
 
   useEffect(() => {
     form.setFieldsValue({
+      caseType: CASE_TYPE.RETURN_HOME,
       workerId: presetWorkerId ? Number(presetWorkerId) : undefined,
       requestDate: today(),
       entrustDate: today(),
@@ -57,14 +67,17 @@ const NenkinRequest: React.FC = () => {
   }, [presetWorkerId, form]);
 
   const handleFinish = async (values: any) => {
+    const withAgent = values.caseType !== CASE_TYPE.RETURN_JAPAN;
     const payload: API.NenkinProcedureForm = {
       serviceType,
       workerId: values.workerId,
-      agentId: values.agentId,
-      relation:
-        values.relationOption === OPTION_OTHERS
+      caseType: values.caseType,
+      agentId: withAgent ? values.agentId : undefined,
+      relation: withAgent
+        ? values.relationOption === OPTION_OTHERS
           ? values.relationCustom
-          : values.relationOption,
+          : values.relationOption
+        : undefined,
       ...(isFirst
         ? {
             requestDate: toApiDate(values.requestDate),
@@ -127,33 +140,58 @@ const NenkinRequest: React.FC = () => {
               }}
             />
 
-            <ProFormSelect
-              name="agentId"
-              label="Chọn người được uỷ quyền"
-              showSearch
-              rules={[{ required: true, message: 'Hãy chọn người được uỷ quyền' }]}
-              debounceTime={300}
-              request={async ({ keyWords }) => {
-                const res = await searchAgents(keyWords);
-                return (res?.data || []).map((a) => ({
-                  label: a.name,
-                  value: a.id,
-                }));
-              }}
-            />
+            {!isFirst && (
+              <ProFormSelect
+                name="caseType"
+                label="Trường hợp của người lao động"
+                options={CASE_TYPE_OPTIONS}
+                allowClear={false}
+                tooltip="Người quay lại Nhật tự khai thuế nên không cần người đại diện nộp thuế, và bộ hồ sơ bỏ tờ 所得税・消費税の納税管理人の届出書."
+                rules={[{ required: true, message: 'Hãy chọn trường hợp' }]}
+              />
+            )}
 
-            <ProFormSelect
-              name="relationOption"
-              label="Quan hệ với người được uỷ quyền"
-              options={master?.agentRelations}
-              rules={[{ required: true, message: 'Hãy chọn quan hệ' }]}
-            />
-            {relation === OPTION_OTHERS && (
+            {needsAgent && (
+              <ProFormSelect
+                name="agentId"
+                label="Chọn người được uỷ quyền"
+                showSearch
+                rules={[
+                  { required: true, message: 'Hãy chọn người được uỷ quyền' },
+                ]}
+                debounceTime={300}
+                request={async ({ keyWords }) => {
+                  const res = await searchAgents(keyWords);
+                  return (res?.data || []).map((a) => ({
+                    label: a.name,
+                    value: a.id,
+                  }));
+                }}
+              />
+            )}
+
+            {needsAgent && (
+              <ProFormSelect
+                name="relationOption"
+                label="Quan hệ với người được uỷ quyền"
+                options={master?.agentRelations}
+                rules={[{ required: true, message: 'Hãy chọn quan hệ' }]}
+              />
+            )}
+            {needsAgent && relation === OPTION_OTHERS && (
               <ProFormText
                 name="relationCustom"
                 label="Quan hệ (tự nhập)"
                 placeholder="Vui lòng ghi cụ thể"
                 rules={[{ required: true, message: 'Hãy ghi rõ quan hệ' }]}
+              />
+            )}
+            {!needsAgent && (
+              <Alert
+                type="info"
+                showIcon
+                style={{ marginBottom: 16 }}
+                message="Người lao động quay lại Nhật nên tự khai thuế: không cần người đại diện và bộ hồ sơ bỏ tờ 所得税・消費税の納税管理人の届出書."
               />
             )}
 

@@ -71,6 +71,33 @@ export const SERVICE_TYPE_LABELS: Record<number, string> = {
   [SERVICE_TYPE.SECOND]: 'Thủ tục Nenkin lần 2',
 };
 
+/** Truong hop cua nguoi lao dong khi lam thu tuc. */
+export const CASE_TYPE = {
+  RETURN_HOME: 1,
+  RETURN_JAPAN: 2,
+} as const;
+
+export const CASE_TYPE_OPTIONS = [
+  { value: CASE_TYPE.RETURN_HOME, label: 'Về nước hẳn' },
+  { value: CASE_TYPE.RETURN_JAPAN, label: 'Quay lại Nhật' },
+];
+
+export const CASE_TYPE_LABELS: Record<number, string> = {
+  [CASE_TYPE.RETURN_HOME]: 'Về nước hẳn',
+  [CASE_TYPE.RETURN_JAPAN]: 'Quay lại Nhật',
+};
+
+/** Che do luong huu da tham gia, in o cot (4) muc 7 cua 請求書. */
+export const PENSION_SCHEME_OPTIONS = [
+  { value: 1, label: '国民年金 — Bảo hiểm quốc dân' },
+  { value: 2, label: '厚生年金保険 — Bảo hiểm lao động xã hội' },
+  { value: 3, label: '船員保険 — Bảo hiểm hàng hải' },
+  { value: 4, label: '共済組合 — Hiệp hội hỗ tương' },
+];
+
+/** Lao dong lam cong ty chiem da so nen mac dinh 厚生年金保険. */
+export const DEFAULT_PENSION_SCHEME = 2;
+
 export const BANK_COUNTRY = {
   JAPAN: '81',
   VIETNAM: '84',
@@ -118,6 +145,11 @@ export const OCR_DOCUMENT_SOURCES: {
   { type: 'NENKIN_BOOK', field: 'nenkinBookImage', label: 'Sổ Nenkin' },
   { type: 'BANK', field: 'bankImage', label: 'Giấy xác nhận tài khoản ngân hàng' },
 ];
+
+/** Nhan cho cac o anh khong doc bang AI (chi luu tru va ghep vao ho so). */
+export const EXTRA_DOCUMENT_LABELS: Record<string, string> = {
+  insuranceLossImage: 'Giấy xác nhận cắt bảo hiểm Nenkin (資格喪失証明書)',
+};
 
 /** Nhan tieng Viet cua cac truong AI co the doc ra. */
 export const OCR_FIELD_LABELS: Record<string, string> = {

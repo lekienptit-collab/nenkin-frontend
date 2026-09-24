@@ -1,4 +1,4 @@
-import { WORKER_SECTIONS } from '@/constants/nenkin';
+import { DEFAULT_PENSION_SCHEME, WORKER_SECTIONS } from '@/constants/nenkin';
 import { masterData as queryMasterData } from '@/services/nenkin/masterData';
 import { addWorker, getWorker, updateWorker } from '@/services/nenkin/worker';
 import { toApiDate, toApiDates } from '@/utils/date';
@@ -51,6 +51,7 @@ const toPayload = (values: any): API.WorkerForm => ({
     )
     .map((h: API.InsuranceHistoryItem) => ({
       ...h,
+      pensionScheme: h.pensionScheme ?? DEFAULT_PENSION_SCHEME,
       fromDate: toApiDate(h.fromDate),
       toDate: toApiDate(h.toDate),
     })),
@@ -72,7 +73,10 @@ const WorkerForm: React.FC = () => {
 
   useEffect(() => {
     if (!isUpdate) {
-      form.setFieldsValue({ country: 'Việt Nam', insuranceHistories: [{}] });
+      form.setFieldsValue({
+        country: 'Việt Nam',
+        insuranceHistories: [{ pensionScheme: DEFAULT_PENSION_SCHEME }],
+      });
       return;
     }
     if (!worker) return;
@@ -80,7 +84,7 @@ const WorkerForm: React.FC = () => {
       ...worker,
       insuranceHistories: worker.insuranceHistories?.length
         ? worker.insuranceHistories
-        : [{}],
+        : [{ pensionScheme: DEFAULT_PENSION_SCHEME }],
     });
   }, [worker, isUpdate, form]);
 
@@ -120,7 +124,7 @@ const WorkerForm: React.FC = () => {
         >
           <Row gutter={16}>
             <Col xs={24} lg={18}>
-              <OcrPanel {...sectionProps} />
+              <OcrPanel {...sectionProps} worker={worker} isUpdate={isUpdate} />
               <PersonalSection {...sectionProps} />
               <AddressSection {...sectionProps} />
               <ResidenceSection {...sectionProps} />

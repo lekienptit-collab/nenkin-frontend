@@ -5,7 +5,7 @@ import { useFetch } from '@/utils/useFetch';
 import { ArrowRightOutlined, FilePdfOutlined, LockOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import { Button, Col, Empty, Row, Skeleton } from 'antd';
+import { Button, Col, Empty, Row, Skeleton, Tag } from 'antd';
 import React from 'react';
 import styles from './index.less';
 
@@ -54,6 +54,7 @@ const NenkinServicePage: React.FC = () => {
                   <span className={styles.paperIndex}>{index + 1}</span>
                   <FilePdfOutlined className={styles.paperIcon} />
                   <span className={styles.paperName}>{item.name}</span>
+                  {item.scanned && <Tag color="blue">bản scan</Tag>}
                   <code className={styles.paperCode}>{item.code}</code>
                 </li>
               ))}

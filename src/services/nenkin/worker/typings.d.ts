@@ -24,6 +24,8 @@ declare namespace API {
     address?: string;
     fromDate?: string;
     toDate?: string;
+    /** 1 = 国民年金, 2 = 厚生年金保険, 3 = 船員保険, 4 = 共済組合 */
+    pensionScheme?: number;
     sortOrder?: number;
   };
 
@@ -59,6 +61,8 @@ declare namespace API {
 
     pensionNumber?: string;
     nenkinBookImage?: string;
+    /** Anh giay xac nhan cat bao hiem Nenkin (資格喪失証明書). */
+    insuranceLossImage?: string;
 
     bankCountry?: string;
     bankName?: string;
@@ -69,6 +73,7 @@ declare namespace API {
     bankAccountName?: string;
     bankAccountNameFurigana?: string;
     bankAccountNumber?: string;
+    bankAccountType?: number;
     bankImage?: string;
     bankImageBack?: string;
 

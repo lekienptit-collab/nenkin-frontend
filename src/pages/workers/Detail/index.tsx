@@ -362,6 +362,14 @@ const WorkerDetail: React.FC = () => {
           <ProDescriptions.Item label="Số tài khoản">
             {worker?.bankAccountNumber || '-'}
           </ProDescriptions.Item>
+          <ProDescriptions.Item label="Loại tài khoản">
+            {worker?.bankAccountType
+              ? findLabel(
+                  master?.bankAccountTypes,
+                  String(worker.bankAccountType),
+                )
+              : '-'}
+          </ProDescriptions.Item>
         </ProDescriptions>
         <Row gutter={16}>
           <Col xs={24} md={12}>

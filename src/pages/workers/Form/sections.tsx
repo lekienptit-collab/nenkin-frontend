@@ -2,11 +2,14 @@ import ImageUploader from '@/components/ImageUploader';
 import SegmentedInput from '@/components/SegmentedInput';
 import {
   BANK_COUNTRY_OPTIONS,
+  DEFAULT_PENSION_SCHEME,
+  EXTRA_DOCUMENT_LABELS,
   GENDER,
   JP_POSTAL_CODE_PATTERN,
   MAX_INSURANCE_HISTORY,
   OPTION_OTHERS,
   PENSION_NUMBER_PATTERN,
+  PENSION_SCHEME_OPTIONS,
 } from '@/constants/nenkin';
 import { lookupJpAddress } from '@/services/nenkin/masterData';
 import { SearchOutlined } from '@ant-design/icons';
@@ -333,6 +336,15 @@ export const NenkinBookSection: React.FC<SectionProps> = () => (
           <ImageUploader />
         </Form.Item>
       </Col>
+      <Col xs={24} md={12}>
+        <Form.Item
+          name="insuranceLossImage"
+          label={EXTRA_DOCUMENT_LABELS.insuranceLossImage}
+          tooltip="Giấy do công ty cấp khi cắt bảo hiểm. Ảnh này được ghép thành một trang trong bộ hồ sơ Nenkin lần 1."
+        >
+          <ImageUploader />
+        </Form.Item>
+      </Col>
     </Row>
   </Section>
 );
@@ -473,6 +485,17 @@ export const BankSection: React.FC<SectionProps> = ({ form, master }) => {
             placeholder="ví dụ: 0751000019382"
           />
         </Col>
+        <Col {...twoCols}>
+          <ProFormSelect
+            name="bankAccountType"
+            label="Loại tài khoản"
+            options={(master?.bankAccountTypes || []).map((t) => ({
+              label: t.label,
+              value: Number(t.value),
+            }))}
+            tooltip="Dùng khi người lao động quay lại Nhật và tự nhận tiền hoàn thuế: bộ hồ sơ lần 2 khoanh 普通/当座/貯蓄 theo ô này."
+          />
+        </Col>
       </Row>
 
       <Typography.Title level={5}>Ảnh giấy xác nhận tài khoản</Typography.Title>
@@ -555,32 +578,40 @@ export const InsuranceSection: React.FC<SectionProps> = () => (
       copyIconProps={false}
     >
       <Row gutter={16}>
-        <Col xs={24} md={7}>
+        <Col xs={24} md={6}>
           <ProFormTextArea
             name="workPlace"
             label="Tên cơ sở kinh doanh"
             fieldProps={{ autoSize: { minRows: 1, maxRows: 3 } }}
           />
         </Col>
-        <Col xs={24} md={7}>
+        <Col xs={24} md={6}>
           <ProFormTextArea
             name="address"
             label="Địa chỉ"
             fieldProps={{ autoSize: { minRows: 1, maxRows: 3 } }}
           />
         </Col>
-        <Col xs={24} md={5}>
+        <Col xs={24} md={4}>
           <ProFormDatePicker
             name="fromDate"
             label="Làm việc từ ngày"
             fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
           />
         </Col>
-        <Col xs={24} md={5}>
+        <Col xs={24} md={4}>
           <ProFormDatePicker
             name="toDate"
             label="Đến ngày"
             fieldProps={{ format: 'DD/MM/YYYY', style: { width: '100%' } }}
+          />
+        </Col>
+        <Col xs={24} md={4}>
+          <ProFormSelect
+            name="pensionScheme"
+            label="Chế độ lương hưu"
+            options={PENSION_SCHEME_OPTIONS}
+            initialValue={DEFAULT_PENSION_SCHEME}
           />
         </Col>
       </Row>
