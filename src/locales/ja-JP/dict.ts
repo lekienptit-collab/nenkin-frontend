@@ -590,6 +590,11 @@ const dict: Record<string, string> = {
   'Thành phố/Huyện của chi nhánh': '支店の所在市区町村',
   'Ảnh hộ chiếu trang đầu': 'パスポート1ページ目の画像',
   'Ảnh thẻ ngoại kiều mặt trước': '在留カード表面の画像',
+  // ----- Giấy tờ đính kèm của thủ tục lần 1 -----
+  'Hộ chiếu': 'パスポート',
+  'Thẻ ngoại kiều': '在留カード',
+  'Giấy do công ty cấp khi cắt bảo hiểm. Hiện chỉ lưu vào hồ sơ, chưa ghép vào bộ giấy tờ xuất ra vì khách hàng chưa gửi mẫu.':
+    '会社が資格喪失時に発行する書類です。現時点では情報として保存するだけで、出力する書類一式には含めていません（見本が未提供のため）。',
 };
 
 export default dict;

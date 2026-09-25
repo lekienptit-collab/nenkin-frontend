@@ -343,7 +343,7 @@ export const NenkinBookSection: React.FC<SectionProps> = () => (
         <Form.Item
           name="insuranceLossImage"
           label={EXTRA_DOCUMENT_LABELS.insuranceLossImage}
-          tooltip={t('Giấy do công ty cấp khi cắt bảo hiểm. Ảnh này được ghép thành một trang trong bộ hồ sơ Nenkin lần 1.')}
+          tooltip={t('Giấy do công ty cấp khi cắt bảo hiểm. Hiện chỉ lưu vào hồ sơ, chưa ghép vào bộ giấy tờ xuất ra vì khách hàng chưa gửi mẫu.')}
         >
           <ImageUploader />
         </Form.Item>
