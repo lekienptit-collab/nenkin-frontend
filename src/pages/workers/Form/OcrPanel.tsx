@@ -51,6 +51,21 @@ const ERROR_MESSAGES: Record<string, string> = {
   OCR_NO_DOCUMENT: t('Chưa có ảnh giấy tờ nào để đọc.'),
 };
 
+/** Ô trống thật sự. Không dùng `!value` vì giới tính Nam có mã là 0. */
+const isEmpty = (value: any) =>
+  value === undefined || value === null || value === '';
+
+/** Tên giấy tờ theo ngôn ngữ đang chọn — nhãn backend trả về luôn là tiếng Việt. */
+const documentLabel = (result: API.OcrDocumentResult) =>
+  OCR_DOCUMENT_SOURCES.find((s) => s.type === result.type)?.label ||
+  result.label;
+
+/** "Sổ Nenkin: <lý do>" cho một ảnh không đọc được. */
+const failureText = (result: API.OcrDocumentResult) =>
+  `${documentLabel(result)}: ${
+    OCR_ERROR_LABELS[result.errorCode || ''] || t('Không đọc được')
+  }`;
+
 /** Đổi giá trị thô thành chữ để người dùng đối chiếu trước khi áp dụng. */
 const display = (
   field: string,
@@ -171,8 +186,8 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
     // Mặc định chỉ tích những ô đang trống, tránh ghi đè dữ liệu đã nhập tay.
     setChecked(
       new Set(
-        Object.keys(res.fields || {}).filter(
-          (field) => !form.getFieldValue(field),
+        Object.keys(res.fields || {}).filter((field) =>
+          isEmpty(form.getFieldValue(field)),
         ),
       ),
     );
@@ -212,13 +227,22 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
       );
       if (!res || cancelled) return;
 
+      // Ảnh nào không đọc được (hết hạn mức, sai định dạng...) phải báo rõ,
+      // không thì người dùng tưởng ảnh đọc xong mà không có gì mới.
+      const failed = (res.results || []).filter((r) => !r.success);
+      if (failed.length > 0) {
+        message.warning(failed.map(failureText).join('; '), 6);
+      }
+
       const entries = Object.entries(res.fields || {}).filter(
-        ([, v]) => v !== undefined && v !== null && v !== '',
+        ([, v]) => !isEmpty(v),
       );
-      const empty = entries.filter(([field]) => !form.getFieldValue(field));
+      const empty = entries.filter(([field]) =>
+        isEmpty(form.getFieldValue(field)),
+      );
       const conflicting = entries.filter(([field, v]) => {
         const current = form.getFieldValue(field);
-        return current && String(current) !== String(v);
+        return !isEmpty(current) && String(current) !== String(v);
       });
 
       if (empty.length > 0) {
@@ -235,7 +259,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
         setOnlyConflicts(true);
         setResult({ ...res, fields: Object.fromEntries(conflicting) });
         setChecked(new Set());
-      } else if (empty.length === 0) {
+      } else if (empty.length === 0 && failed.length < changed.length) {
         message.info(t('Ảnh mới không có thông tin nào khác với hồ sơ hiện tại.'));
       }
     })();
@@ -334,10 +358,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
             description={
               <ul style={{ margin: 0, paddingLeft: 18 }}>
                 {failed.map((f) => (
-                  <li key={f.type}>
-                    {f.label}:{' '}
-                    {OCR_ERROR_LABELS[f.errorCode || ''] || t('Không đọc được')}
-                  </li>
+                  <li key={f.type}>{failureText(f)}</li>
                 ))}
               </ul>
             }

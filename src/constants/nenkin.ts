@@ -182,8 +182,9 @@ export const OCR_FIELD_LABELS: Record<string, string> = {
 /** Ly do khong doc duoc mot anh. */
 export const OCR_ERROR_LABELS: Record<string, string> = {
   OCR_RATE_LIMITED: t('Vượt giới hạn số lần gọi AI, thử lại sau ít phút'),
+  OCR_QUOTA_EXCEEDED: t('Tài khoản AI đã hết hạn mức sử dụng, cần nạp thêm'),
   OCR_IMAGE_NOT_FOUND: t('Không tìm thấy file ảnh trên máy chủ'),
-  OCR_IMAGE_NOT_SUPPORTED: t('Định dạng file không đọc được (chỉ đọc được ảnh)'),
+  OCR_IMAGE_NOT_SUPPORTED: t('Định dạng file không đọc được (chỉ đọc được ảnh JPG, PNG, WEBP)'),
   OCR_EMPTY_RESULT: t('AI không đọc được nội dung nào từ ảnh'),
   OCR_PROVIDER_ERROR: t('Dịch vụ AI đang lỗi, thử lại sau'),
   OCR_NOT_CONFIGURED: t('Chưa cấu hình dịch vụ AI trên máy chủ'),

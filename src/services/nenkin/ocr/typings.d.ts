@@ -8,7 +8,7 @@ declare namespace API {
     | 'BANK';
 
   type OcrStatus = {
-    /** Backend da cau hinh GROQ_API_KEY hay chua. */
+    /** Backend da cau hinh OPENAI_API_KEY hay chua. */
     enabled: boolean;
     documentTypes: { type: WorkerDocumentType; label: string }[];
   };

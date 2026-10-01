@@ -132,9 +132,9 @@ AI **chỉ gợi ý, không tự ghi vào form**. Kết quả hiện trong bản
 *đang có trên form* / *AI đọc được*; ô nào đang trống thì tích sẵn, ô nào đã có dữ liệu
 thì để trống để người dùng tự quyết định có ghi đè hay không.
 
-Khối này tự ẩn khi backend chưa cấu hình `GROQ_API_KEY` (`GET /ocr/status`).
-Đọc đủ 6 ảnh mất khoảng 60-90 giây vì giới hạn tốc độ của Groq — xem
-`../nenkin-backend/README.md` mục *Đọc giấy tờ bằng AI*.
+Khối này tự ẩn khi backend chưa cấu hình `OPENAI_API_KEY` (`GET /ocr/status`).
+Đọc đủ 6 ảnh mất khoảng 3-5 giây — xem `../nenkin-backend/README.md` mục
+*Đọc giấy tờ bằng AI*.
 
 Thêm loại giấy tờ đọc được: bổ sung vào `OCR_DOCUMENT_SOURCES` và `OCR_FIELD_LABELS`
 trong `src/constants/nenkin.ts` (phải khớp với khai báo phía backend).

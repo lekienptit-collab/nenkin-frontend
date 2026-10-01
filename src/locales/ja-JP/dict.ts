@@ -372,9 +372,11 @@ const dict: Record<string, string> = {
   'Đọc ảnh bị lỗi. Xin thử lại!': '画像の読み取りに失敗しました。もう一度お試しください。',
   'Vượt giới hạn số lần gọi AI, thử lại sau ít phút':
     'AIの利用回数の上限に達しました。数分後にお試しください',
+  'Tài khoản AI đã hết hạn mức sử dụng, cần nạp thêm':
+    'AIアカウントの利用枠を使い切りました。チャージが必要です',
   'Không tìm thấy file ảnh trên máy chủ': 'サーバーに画像ファイルが見つかりません',
-  'Định dạng file không đọc được (chỉ đọc được ảnh)':
-    '読み取れないファイル形式です（画像のみ対応）',
+  'Định dạng file không đọc được (chỉ đọc được ảnh JPG, PNG, WEBP)':
+    '読み取れないファイル形式です（JPG・PNG・WEBP画像のみ対応）',
   'AI không đọc được nội dung nào từ ảnh': 'AIが画像から内容を読み取れませんでした',
   'Dịch vụ AI đang lỗi, thử lại sau': 'AIサービスで障害が発生しています。後ほどお試しください',
   'Chưa cấu hình dịch vụ AI trên máy chủ': 'サーバーでAIサービスが設定されていません',
