@@ -36,7 +36,19 @@ export type OcrPanelProps = {
   worker?: API.WorkerListItem;
   /** Đang sửa hồ sơ cũ (true) hay thêm mới (false). */
   isUpdate?: boolean;
+  /**
+   * Gọi sau khi điền địa chỉ ở Nhật vào form. Thẻ ngoại kiều không in mã bưu
+   * điện nên form tự tra mã theo địa chỉ vừa điền.
+   */
+  onAddressApplied?: () => void;
 };
+
+/** Các ô địa chỉ ở Nhật mà AI có thể đọc từ thẻ ngoại kiều. */
+const JP_ADDRESS_FIELDS = [
+  'addressJpPrefectureCode',
+  'addressJpDistrict',
+  'addressJpHouseNumber',
+];
 
 type Suggestion = {
   field: string;
@@ -104,6 +116,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
   master,
   worker,
   isUpdate,
+  onAddressApplied,
 }) => {
   const { data: status } = useFetch<API.OcrStatus>(() => ocrStatus());
 
@@ -247,6 +260,9 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
 
       if (empty.length > 0) {
         form.setFieldsValue(Object.fromEntries(empty));
+        if (empty.some(([field]) => JP_ADDRESS_FIELDS.includes(field))) {
+          onAddressApplied?.();
+        }
         message.success(
           tv('Đã đọc {docs} và điền {n} ô.', {
             docs: changed.map((c) => c.label).join(', '),
@@ -281,6 +297,9 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
       tv('Đã điền {n} ô từ ảnh giấy tờ.', { n: Object.keys(values).length }),
     );
     setResult(undefined);
+    if (Object.keys(values).some((field) => JP_ADDRESS_FIELDS.includes(field))) {
+      onAddressApplied?.();
+    }
   };
 
   const toggle = (field: string) =>

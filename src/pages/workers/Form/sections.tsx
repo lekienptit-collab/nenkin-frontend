@@ -12,8 +12,8 @@ import {
   PENSION_NUMBER_PATTERN,
   PENSION_SCHEME_OPTIONS,
 } from '@/constants/nenkin';
-import { lookupJpAddress } from '@/services/nenkin/masterData';
-import { SearchOutlined } from '@ant-design/icons';
+import { lookupJpAddress, lookupJpPostalCode } from '@/services/nenkin/masterData';
+import { AimOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   ProCard,
   ProFormDatePicker,
@@ -26,11 +26,16 @@ import {
 } from '@ant-design/pro-components';
 import type { FormInstance } from 'antd';
 import { Alert, Button, Col, Form, Row, Select, Space, Typography } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { useImperativeHandle, useMemo, useState } from 'react';
 
 export type SectionProps = {
   form: FormInstance;
   master?: API.MasterData;
+};
+
+/** Cho OcrPanel gọi tra mã bưu điện sau khi AI điền địa chỉ từ thẻ ngoại kiều. */
+export type AddressSectionHandle = {
+  lookupPostalCode: (options?: { auto?: boolean }) => Promise<void>;
 };
 
 const twoCols = { xs: 24, md: 12 };
@@ -120,169 +125,282 @@ export const PersonalSection: React.FC<SectionProps> = () => (
 
 // ---------------------------------------------------------------- Địa chỉ
 
-export const AddressSection: React.FC<SectionProps> = ({ form, master }) => {
-  const [lookingUp, setLookingUp] = useState(false);
-  const [lookupMessage, setLookupMessage] = useState<{
-    type: 'success' | 'warning' | 'error';
-    text: string;
-  }>();
-  const [districtChoices, setDistrictChoices] = useState<string[]>([]);
+type LookupMessage = {
+  type: 'success' | 'warning' | 'error' | 'info';
+  text: string;
+};
 
-  const handleLookup = async () => {
-    const postalCode = form.getFieldValue('addressJpPostalCode');
-    setDistrictChoices([]);
-    if (!JP_POSTAL_CODE_PATTERN.test(postalCode || '')) {
-      setLookupMessage({
-        type: 'error',
-        text: t('Nhập đủ mã bưu điện dạng 123-4567 để tìm kiếm.'),
-      });
-      return;
-    }
+export const AddressSection = React.forwardRef<AddressSectionHandle, SectionProps>(
+  ({ form, master }, ref) => {
+    const [lookingUp, setLookingUp] = useState(false);
+    const [findingPostal, setFindingPostal] = useState(false);
+    const [lookupMessage, setLookupMessage] = useState<LookupMessage>();
+    const [districtChoices, setDistrictChoices] = useState<string[]>([]);
+    /** Nhiều mã bưu điện cùng khớp địa chỉ: để người dùng chọn. */
+    const [postalChoices, setPostalChoices] = useState<API.JpPostalCodeMatch[]>([]);
 
-    setLookingUp(true);
-    try {
-      const res = await lookupJpAddress(postalCode);
-      const results = res?.results || [];
-
-      if (results.length === 0) {
+    const handleLookup = async () => {
+      const postalCode = form.getFieldValue('addressJpPostalCode');
+      setDistrictChoices([]);
+      setPostalChoices([]);
+      if (!JP_POSTAL_CODE_PATTERN.test(postalCode || '')) {
         setLookupMessage({
-          type: 'warning',
-          text: t('Không tìm thấy địa chỉ, vui lòng nhập tay.'),
+          type: 'error',
+          text: t('Nhập đủ mã bưu điện dạng 123-4567 để tìm kiếm.'),
         });
         return;
       }
 
-      form.setFieldValue('addressJpPrefectureCode', results[0].prefectureCode);
+      setLookingUp(true);
+      try {
+        const res = await lookupJpAddress(postalCode);
+        const results = res?.results || [];
 
-      if (results.length === 1) {
+        if (results.length === 0) {
+          setLookupMessage({
+            type: 'warning',
+            text: t('Không tìm thấy địa chỉ, vui lòng nhập tay.'),
+          });
+          return;
+        }
+
+        form.setFieldValue('addressJpPrefectureCode', results[0].prefectureCode);
+
+        if (results.length === 1) {
+          form.setFieldValue('addressJpDistrict', results[0].district);
+          setLookupMessage({
+            type: 'success',
+            text: t('Đã tìm thấy địa chỉ, vui lòng nhập phần còn lại bằng tay.'),
+          });
+          return;
+        }
+
+        // Nhiều địa điểm cùng mã bưu điện: để người dùng chọn.
+        setDistrictChoices(results.map((r) => r.district));
         form.setFieldValue('addressJpDistrict', results[0].district);
         setLookupMessage({
-          type: 'success',
-          text: t('Đã tìm thấy địa chỉ, vui lòng nhập phần còn lại bằng tay.'),
+          type: 'warning',
+          text: tv('Có nhiều hơn một địa điểm có mã bưu điện {code}. Vui lòng chọn.', {
+            code: postalCode,
+          }),
         });
+      } catch (error) {
+        setLookupMessage({
+          type: 'error',
+          text: t('Không tra được địa chỉ lúc này, vui lòng nhập tay.'),
+        });
+      } finally {
+        setLookingUp(false);
+      }
+    };
+
+    /**
+     * Chiều ngược lại: tra mã bưu điện từ Tỉnh + Xã/Phường + Số nhà. Thẻ ngoại
+     * kiều không in mã bưu điện nên AI đọc thẻ xong ô này vẫn trống.
+     *
+     * `auto` = gọi sau khi AI vừa điền địa chỉ: chỉ chạy khi ô mã bưu điện còn
+     * trống, và không báo lỗi khi địa chỉ chưa đủ.
+     */
+    const lookupPostalCode = async ({ auto = false } = {}) => {
+      const prefectureCode = form.getFieldValue('addressJpPrefectureCode');
+      const address = [
+        form.getFieldValue('addressJpDistrict'),
+        form.getFieldValue('addressJpHouseNumber'),
+      ]
+        .filter(Boolean)
+        .join('');
+      if (auto && form.getFieldValue('addressJpPostalCode')) return;
+
+      setPostalChoices([]);
+      setDistrictChoices([]);
+      if (!prefectureCode || !form.getFieldValue('addressJpDistrict')) {
+        if (!auto) {
+          setLookupMessage({
+            type: 'error',
+            text: t('Chọn Tỉnh/Thành phố và nhập Xã/Phường/Thị trấn trước khi tìm mã bưu điện.'),
+          });
+        }
         return;
       }
 
-      // Nhiều địa điểm cùng mã bưu điện: để người dùng chọn.
-      setDistrictChoices(results.map((r) => r.district));
-      form.setFieldValue('addressJpDistrict', results[0].district);
-      setLookupMessage({
-        type: 'warning',
-        text: tv('Có nhiều hơn một địa điểm có mã bưu điện {code}. Vui lòng chọn.', {
-        code: postalCode,
-      }),
-      });
-    } catch (error) {
-      setLookupMessage({
-        type: 'error',
-        text: t('Không tra được địa chỉ lúc này, vui lòng nhập tay.'),
-      });
-    } finally {
-      setLookingUp(false);
-    }
-  };
+      setFindingPostal(true);
+      try {
+        const res = await lookupJpPostalCode(prefectureCode, address);
+        const results = res?.results || [];
+        const label = (r: API.JpPostalCodeMatch) => `${r.postalCode}（${r.city}${r.town}）`;
 
-  return (
-    <Section id="address" title={t('Thông tin địa chỉ')}>
-      <Typography.Title level={5}>{t('Địa chỉ hiện tại (Việt Nam)')}</Typography.Title>
-      <Row gutter={16}>
-        <Col {...twoCols}>
-          <ProFormSelect
-            name="addressVnPrefectureCode"
-            label={t('Tỉnh')}
-            showSearch
-            options={master?.vnProvinces}
-          />
-        </Col>
-        <Col {...twoCols}>
-          <ProFormText
-            name="addressVnDistrict"
-            label={t('Thành phố/Huyện')}
-            tooltip={t('Điền riêng tên thành phố hoặc huyện')}
-          />
-        </Col>
-        <Col {...twoCols}>
-          <ProFormText name="addressVnPostalCode" label={t('Mã bưu điện')} />
-        </Col>
-        <Col {...twoCols}>
-          <ProFormText
-            name="addressVnAddress"
-            label={t('Địa chỉ đầy đủ')}
-            tooltip={t('Tối đa 100 ký tự')}
-            fieldProps={{ maxLength: 100, showCount: true }}
-          />
-        </Col>
-        <Col span={24}>
-          <Form.Item
-            name="leftProofUrl"
-            label={t('Giấy tờ chứng minh đã rời Nhật Bản')}
-            tooltip={t('Ví dụ: bản sao giấy chứng nhận xoá hộ khẩu (住民票の除票の写し等). Nếu khi rời Nhật đã nộp thông báo thuyên chuyển tại cơ quan hành chính thành phố cư trú thì không cần đính kèm.')}
-          >
-            <ImageUploader />
-          </Form.Item>
-        </Col>
-      </Row>
+        if (res.matchLevel === 'none' || results.length === 0) {
+          setLookupMessage({
+            type: 'warning',
+            text: t('Không nhận ra địa chỉ trong dữ liệu Bưu điện Nhật. Hãy kiểm tra lại Tỉnh, Xã/Phường hoặc nhập mã bưu điện bằng tay.'),
+          });
+          return;
+        }
+        if (results.length > 1) {
+          setPostalChoices(results);
+          setLookupMessage({
+            type: 'warning',
+            text: t('Địa chỉ này ứng với nhiều mã bưu điện, vui lòng chọn mã đúng bên dưới.'),
+          });
+          return;
+        }
 
-      <Typography.Title level={5}>{t('Địa chỉ cuối cùng ở Nhật')}</Typography.Title>
-      <Row gutter={16}>
-        <Col {...twoCols}>
-          <Form.Item
-            label={t('Mã bưu điện')}
-            rules={[
-              {
-                pattern: JP_POSTAL_CODE_PATTERN,
-                message: t('Mã bưu điện phải có dạng 123-4567'),
+        form.setFieldValue('addressJpPostalCode', results[0].postalCode);
+        setLookupMessage(
+          res.matchLevel === 'city'
+            ? {
+                type: 'warning',
+                text: tv(
+                  'Không thấy tên khu phố trong dữ liệu Bưu điện Nhật, đã điền mã chung của {city}: {code}. Vui lòng kiểm tra lại.',
+                  { city: results[0].city, code: results[0].postalCode },
+                ),
+              }
+            : {
+                type: 'success',
+                text: tv('Đã tìm thấy mã bưu điện {value}.', { value: label(results[0]) }),
               },
-            ]}
-          >
-            <Space align="start">
-              <Form.Item name="addressJpPostalCode" noStyle>
-                <SegmentedInput segments={[3, 4]} placeholders={['123', '4567']} />
-              </Form.Item>
-              <Button
-                icon={<SearchOutlined />}
-                loading={lookingUp}
-                onClick={handleLookup}
-              >
-                {t('Tìm địa chỉ')}
-              </Button>
-            </Space>
-          </Form.Item>
-          {lookupMessage && (
-            <Alert
-              type={lookupMessage.type}
-              message={lookupMessage.text}
-              showIcon
-              style={{ marginBottom: 16 }}
+        );
+      } catch (error) {
+        setLookupMessage({
+          type: 'error',
+          text: t('Không tra được mã bưu điện lúc này, vui lòng nhập tay.'),
+        });
+      } finally {
+        setFindingPostal(false);
+      }
+    };
+
+    useImperativeHandle(ref, () => ({ lookupPostalCode }));
+
+    return (
+      <Section id="address" title={t('Thông tin địa chỉ')}>
+        <Typography.Title level={5}>{t('Địa chỉ hiện tại (Việt Nam)')}</Typography.Title>
+        <Row gutter={16}>
+          <Col {...twoCols}>
+            <ProFormSelect
+              name="addressVnPrefectureCode"
+              label={t('Tỉnh')}
+              showSearch
+              options={master?.vnProvinces}
             />
-          )}
-        </Col>
-        <Col {...twoCols}>
-          <ProFormSelect
-            name="addressJpPrefectureCode"
-            label={t('Tỉnh/Thành phố')}
-            showSearch
-            options={master?.jpPrefectures}
-          />
-        </Col>
-        <Col {...twoCols}>
-          {districtChoices.length > 0 ? (
-            <Form.Item name="addressJpDistrict" label={t('Xã/Phường/Thị trấn')}>
-              <Select
-                options={districtChoices.map((d) => ({ label: d, value: d }))}
-              />
+          </Col>
+          <Col {...twoCols}>
+            <ProFormText
+              name="addressVnDistrict"
+              label={t('Thành phố/Huyện')}
+              tooltip={t('Điền riêng tên thành phố hoặc huyện')}
+            />
+          </Col>
+          <Col {...twoCols}>
+            <ProFormText name="addressVnPostalCode" label={t('Mã bưu điện')} />
+          </Col>
+          <Col {...twoCols}>
+            <ProFormText
+              name="addressVnAddress"
+              label={t('Địa chỉ đầy đủ')}
+              tooltip={t('Tối đa 100 ký tự')}
+              fieldProps={{ maxLength: 100, showCount: true }}
+            />
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              name="leftProofUrl"
+              label={t('Giấy tờ chứng minh đã rời Nhật Bản')}
+              tooltip={t('Ví dụ: bản sao giấy chứng nhận xoá hộ khẩu (住民票の除票の写し等). Nếu khi rời Nhật đã nộp thông báo thuyên chuyển tại cơ quan hành chính thành phố cư trú thì không cần đính kèm.')}
+            >
+              <ImageUploader />
             </Form.Item>
-          ) : (
-            <ProFormText name="addressJpDistrict" label={t('Xã/Phường/Thị trấn')} />
-          )}
-        </Col>
-        <Col {...twoCols}>
-          <ProFormText name="addressJpHouseNumber" label={t('Đường phố/Số nhà')} />
-        </Col>
-      </Row>
-    </Section>
-  );
-};
+          </Col>
+        </Row>
+
+        <Typography.Title level={5}>{t('Địa chỉ cuối cùng ở Nhật')}</Typography.Title>
+        <Row gutter={16}>
+          <Col {...twoCols}>
+            <Form.Item
+              label={t('Mã bưu điện')}
+              tooltip={t('Có mã bưu điện thì bấm "Tìm địa chỉ". Chỉ có địa chỉ (ví dụ đọc từ thẻ ngoại kiều) thì bấm "Tìm mã bưu điện" — hệ thống tra theo dữ liệu chính thức của Bưu điện Nhật.')}
+              rules={[
+                {
+                  pattern: JP_POSTAL_CODE_PATTERN,
+                  message: t('Mã bưu điện phải có dạng 123-4567'),
+                },
+              ]}
+            >
+              <Space align="start" wrap>
+                <Form.Item name="addressJpPostalCode" noStyle>
+                  <SegmentedInput segments={[3, 4]} placeholders={['123', '4567']} />
+                </Form.Item>
+                <Button
+                  icon={<SearchOutlined />}
+                  loading={lookingUp}
+                  onClick={handleLookup}
+                >
+                  {t('Tìm địa chỉ')}
+                </Button>
+                <Button
+                  icon={<AimOutlined />}
+                  loading={findingPostal}
+                  onClick={() => lookupPostalCode()}
+                >
+                  {t('Tìm mã bưu điện')}
+                </Button>
+              </Space>
+            </Form.Item>
+            {lookupMessage && (
+              <Alert
+                type={lookupMessage.type}
+                message={lookupMessage.text}
+                showIcon
+                style={{ marginBottom: 16 }}
+              />
+            )}
+            {postalChoices.length > 0 && (
+              <Form.Item label={t('Chọn mã bưu điện')}>
+                <Select
+                  placeholder={t('Chọn mã bưu điện')}
+                  options={postalChoices.map((r) => ({
+                    value: r.postalCode,
+                    label: `${r.postalCode}（${r.city}${r.town}）`,
+                  }))}
+                  onChange={(value) => {
+                    form.setFieldValue('addressJpPostalCode', value);
+                    setPostalChoices([]);
+                    setLookupMessage({
+                      type: 'success',
+                      text: tv('Đã chọn mã bưu điện {value}.', { value }),
+                    });
+                  }}
+                />
+              </Form.Item>
+            )}
+          </Col>
+          <Col {...twoCols}>
+            <ProFormSelect
+              name="addressJpPrefectureCode"
+              label={t('Tỉnh/Thành phố')}
+              showSearch
+              options={master?.jpPrefectures}
+            />
+          </Col>
+          <Col {...twoCols}>
+            {districtChoices.length > 0 ? (
+              <Form.Item name="addressJpDistrict" label={t('Xã/Phường/Thị trấn')}>
+                <Select
+                  options={districtChoices.map((d) => ({ label: d, value: d }))}
+                />
+              </Form.Item>
+            ) : (
+              <ProFormText name="addressJpDistrict" label={t('Xã/Phường/Thị trấn')} />
+            )}
+          </Col>
+          <Col {...twoCols}>
+            <ProFormText name="addressJpHouseNumber" label={t('Đường phố/Số nhà')} />
+          </Col>
+        </Row>
+      </Section>
+    );
+  },
+);
 
 // ------------------------------------------------- Thẻ ngoại kiều / sổ Nenkin
 

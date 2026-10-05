@@ -31,6 +31,49 @@ export async function lookupJpAddress(postalCode: string, options?: Record<strin
   });
 }
 
+/**
+ * Tra ma buu dien Nhat Ban theo dia chi GET /master-data/jp-postal-code.
+ * The ngoai kieu khong in ma buu dien nen phai tra nguoc tu dia chi.
+ */
+export async function lookupJpPostalCode(
+  prefectureCode: string,
+  address: string,
+  options?: Record<string, any>,
+) {
+  return request<API.JpPostalCodeLookup>('/master-data/jp-postal-code', {
+    method: 'GET',
+    params: { prefectureCode, address },
+    ...(options || {}),
+  });
+}
+
+let taxOfficeCache: API.TaxOfficeList | undefined;
+
+/** Danh sach so thue (税務署) GET /master-data/tax-offices, goi 1 lan moi phien. */
+export async function taxOffices(options?: Record<string, any>) {
+  if (taxOfficeCache) {
+    return taxOfficeCache;
+  }
+  taxOfficeCache = await request<API.TaxOfficeList>('/master-data/tax-offices', {
+    method: 'GET',
+    ...(options || {}),
+  });
+  return taxOfficeCache;
+}
+
+/** Goi y so thue phu trach dia chi cuoi cung o Nhat GET /master-data/tax-offices/suggest */
+export async function suggestTaxOffice(
+  prefectureCode: string,
+  address: string,
+  options?: Record<string, any>,
+) {
+  return request<API.TaxOfficeSuggestion>('/master-data/tax-offices/suggest', {
+    method: 'GET',
+    params: { prefectureCode, address },
+    ...(options || {}),
+  });
+}
+
 /** Tai anh giay to POST /uploads/image */
 export async function uploadImage(file: File, options?: Record<string, any>) {
   const data = new FormData();

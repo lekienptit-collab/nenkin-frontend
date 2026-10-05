@@ -7,11 +7,12 @@ import { getErrorCode } from '@/utils/error';
 import { PageContainer, ProForm } from '@ant-design/pro-components';
 import { history, useParams } from '@umijs/max';
 import { Affix, Anchor, Button, Card, Col, Form, message, Row, Space, Spin } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFetch } from '@/utils/useFetch';
 import OcrPanel from './OcrPanel';
 import {
   AddressSection,
+  type AddressSectionHandle,
   BankSection,
   InsuranceSection,
   NenkinBookSection,
@@ -64,6 +65,7 @@ const WorkerForm: React.FC = () => {
   const isUpdate = !!workerId;
 
   const [form] = Form.useForm();
+  const addressRef = useRef<AddressSectionHandle>(null);
 
   const { data: master } = useFetch<API.MasterData>(() => queryMasterData());
   const { data: worker, loading } = useFetch<API.WorkerListItem>(
@@ -132,9 +134,16 @@ const WorkerForm: React.FC = () => {
         >
           <Row gutter={16}>
             <Col xs={24} lg={18}>
-              <OcrPanel {...sectionProps} worker={worker} isUpdate={isUpdate} />
+              <OcrPanel
+                {...sectionProps}
+                worker={worker}
+                isUpdate={isUpdate}
+                onAddressApplied={() =>
+                  addressRef.current?.lookupPostalCode({ auto: true })
+                }
+              />
               <PersonalSection {...sectionProps} />
-              <AddressSection {...sectionProps} />
+              <AddressSection {...sectionProps} ref={addressRef} />
               <ResidenceSection {...sectionProps} />
               <NenkinBookSection {...sectionProps} />
               <BankSection {...sectionProps} />

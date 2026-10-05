@@ -312,7 +312,6 @@ const dict: Record<string, string> = {
   'ví dụ: 三菱UFJ': '例：三菱UFJ',
   'ví dụ: 小田井': '例：小田井',
   'ví dụ: 会社員': '例：会社員',
-  'ví dụ: 真岡税務署': '例：真岡税務署',
   'Thông thường': '普通',
   Séc: '当座',
   'Tiết kiệm': '貯蓄',
@@ -337,8 +336,6 @@ const dict: Record<string, string> = {
   'Thông tin kết quả Nenkin': '年金結果の情報',
   'Ngày có kết quả Nenkin lần 1': '年金1回目の結果日',
   'Ngày có kết quả Nenkin lần 2': '年金2回目の結果日',
-  'Nhập ở đây sẽ cập nhật luôn vào hồ sơ người lao động':
-    'ここで入力すると労働者の情報にも反映されます',
   '国民年金 — Bảo hiểm quốc dân': '国民年金',
   '厚生年金保険 — Bảo hiểm lao động xã hội': '厚生年金保険',
   '船員保険 — Bảo hiểm hàng hải': '船員保険',
@@ -454,12 +451,6 @@ const dict: Record<string, string> = {
   'Ngày uỷ quyền khai thuế': '申告の委任日',
   'Hãy chọn ngày uỷ quyền khai thuế': '申告の委任日を選択してください',
   'Văn phòng thuế': '税務署',
-  'Văn phòng thuế phụ trách địa chỉ cuối cùng ở Nhật của người lao động':
-    '労働者の日本での最後の住所を管轄する税務署',
-  'Thủ tục lần 2 chỉ làm được sau khi đã làm thủ tục lần 1.':
-    '2回目の手続きは1回目を行ったあとにのみ実施できます。',
-  'Người lao động chưa làm thủ tục lần 1, không thể làm thủ tục lần 2.':
-    '1回目の手続きが未実施のため、2回目の手続きはできません。',
   'Tạo hồ sơ': '書類を作成',
   'Tạo hồ sơ bị lỗi. Xin thử lại!': '書類の作成に失敗しました。もう一度お試しください。',
   'Đã tạo hồ sơ thành công.': '書類を作成しました。',
@@ -597,6 +588,48 @@ const dict: Record<string, string> = {
   'Thẻ ngoại kiều': '在留カード',
   'Giấy do công ty cấp khi cắt bảo hiểm. Hiện chỉ lưu vào hồ sơ, chưa ghép vào bộ giấy tờ xuất ra vì khách hàng chưa gửi mẫu.':
     '会社が資格喪失時に発行する書類です。現時点では情報として保存するだけで、出力する書類一式には含めていません（見本が未提供のため）。',
+  // ----- Sở thuế (税務署) và mã bưu điện tra theo địa chỉ -----
+  'Hãy nhập ngày có kết quả Nenkin lần 1': '1回目の脱退一時金の決定日を入力してください',
+  'Năm khai thuế (年分) trên tờ khai lấy theo năm của ngày này. Hệ thống tự điền theo hồ sơ người lao động; sửa ở đây sẽ cập nhật luôn vào hồ sơ.':
+    '申告書の「年分」はこの日付の年になります。労働者情報から自動入力され、ここで修正すると労働者情報にも反映されます。',
+  'Sở thuế phụ trách địa chỉ cuối cùng ở Nhật của người lao động. Hệ thống tự tìm theo khu vực quản lý của Cục thuế Nhật Bản (NTA); bạn vẫn có thể chọn sở khác.':
+    '労働者の日本での最後の住所を管轄する税務署です。国税庁の管轄区域から自動で検索しますが、別の税務署を選ぶこともできます。',
+  'Chọn hoặc gõ tên sở thuế, ví dụ: 長尾': '税務署を選択または入力（例：長尾）',
+  'Người lao động chưa có địa chỉ cuối cùng ở Nhật nên chưa tìm được sở thuế. Hãy bổ sung địa chỉ trong hồ sơ hoặc chọn tay.':
+    '日本での最後の住所が未登録のため税務署を検索できません。労働者情報に住所を追加するか、手動で選択してください。',
+  'AI gợi ý — hãy kiểm tra lại': 'AIの提案 — 必ずご確認ください',
+  'Tra theo khu vực quản lý của NTA': '国税庁の管轄区域から検索',
+  'Gợi ý theo địa chỉ cuối cùng ở Nhật: {office}': '日本での最後の住所から：{office}',
+  'Dùng sở này': 'この税務署を使う',
+  'Khu vực {city} chia cho nhiều sở thuế, hệ thống chưa xác định được. Hãy chọn một trong các sở: {offices}.':
+    '{city}は複数の税務署に分かれているため特定できませんでした。次のいずれかを選択してください：{offices}',
+  'Không tìm được sở thuế theo địa chỉ, vui lòng chọn tay.': '住所から税務署が見つかりません。手動で選択してください。',
+  'Tra cứu sở thuế và địa chỉ gửi hồ sơ tại': '税務署と書類の送付先は',
+  'trang của Cục thuế Nhật Bản (NTA)': '国税庁のページで確認できます',
+  'Sao chép': 'コピー',
+  'Đã sao chép': 'コピーしました',
+  'Địa chỉ gửi hồ sơ qua bưu điện': '郵送による書類の送付先',
+  'Sở thuế này nhận hồ sơ gửi qua bưu điện tại chính địa chỉ của sở.':
+    'この税務署は郵送された書類を税務署の所在地で受け付けています。',
+  'Khu vực quản lý': '管轄区域',
+  'Xem trang của sở thuế trên NTA': '国税庁の税務署ページ',
+  'Danh sách khu phố thuộc sở': '管轄の町名一覧',
+  'Tra cứu tất cả sở thuế': 'すべての税務署を検索',
+  'Tìm mã bưu điện': '郵便番号を検索',
+  'Chọn mã bưu điện': '郵便番号を選択',
+  'Đã chọn mã bưu điện {value}.': '郵便番号 {value} を選択しました。',
+  'Đã tìm thấy mã bưu điện {value}.': '郵便番号が見つかりました：{value}',
+  'Chọn Tỉnh/Thành phố và nhập Xã/Phường/Thị trấn trước khi tìm mã bưu điện.':
+    '郵便番号を検索する前に、都道府県と市区町村を入力してください。',
+  'Không nhận ra địa chỉ trong dữ liệu Bưu điện Nhật. Hãy kiểm tra lại Tỉnh, Xã/Phường hoặc nhập mã bưu điện bằng tay.':
+    '日本郵便のデータで住所を特定できませんでした。都道府県・市区町村を確認するか、郵便番号を手入力してください。',
+  'Địa chỉ này ứng với nhiều mã bưu điện, vui lòng chọn mã đúng bên dưới.':
+    'この住所に該当する郵便番号が複数あります。下から正しいものを選択してください。',
+  'Không thấy tên khu phố trong dữ liệu Bưu điện Nhật, đã điền mã chung của {city}: {code}. Vui lòng kiểm tra lại.':
+    '日本郵便のデータに町域が見つからないため、{city}の共通の郵便番号 {code} を入力しました。ご確認ください。',
+  'Không tra được mã bưu điện lúc này, vui lòng nhập tay.': '現在郵便番号を検索できません。手入力してください。',
+  'Có mã bưu điện thì bấm "Tìm địa chỉ". Chỉ có địa chỉ (ví dụ đọc từ thẻ ngoại kiều) thì bấm "Tìm mã bưu điện" — hệ thống tra theo dữ liệu chính thức của Bưu điện Nhật.':
+    '郵便番号がある場合は「住所を検索」、住所だけ（在留カードから読み取った場合など）の場合は「郵便番号を検索」を押してください。日本郵便の公式データで検索します。',
 };
 
 export default dict;

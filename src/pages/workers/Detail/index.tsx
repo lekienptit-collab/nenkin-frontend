@@ -1,6 +1,7 @@
 import { t, tv } from '@/utils/t';
 import access from '@/access';
 import ImageUploader from '@/components/ImageUploader';
+import TaxOfficeInfo, { shortTaxOfficeName } from '@/components/TaxOfficeInfo';
 import {
   BANK_COUNTRY_OPTIONS,
   GENDER_LABELS,
@@ -9,7 +10,10 @@ import {
   SERVICE_TYPE,
   SERVICE_TYPE_LABELS,
 } from '@/constants/nenkin';
-import { masterData as queryMasterData } from '@/services/nenkin/masterData';
+import {
+  masterData as queryMasterData,
+  taxOffices as queryTaxOffices,
+} from '@/services/nenkin/masterData';
 import {
   downloadNenkinDocument,
   downloadNenkinProcedure,
@@ -69,7 +73,9 @@ const PaperTable: React.FC<{
   procedure?: API.NenkinProcedureItem;
   workerId: number;
   canCreate: boolean;
-}> = ({ serviceType, procedure, workerId, canCreate }) => (
+  /** Sở thuế ghi trên hồ sơ lần 2, để hiện địa chỉ gửi hồ sơ. */
+  taxOffice?: API.TaxOffice;
+}> = ({ serviceType, procedure, workerId, canCreate, taxOffice }) => (
   <Card
     title={SERVICE_TYPE_LABELS[serviceType]}
     style={{ marginBottom: 16 }}
@@ -120,11 +126,15 @@ const PaperTable: React.FC<{
                 {formatDate(procedure.taxEntrustDate)}
               </ProDescriptions.Item>
               <ProDescriptions.Item label={t('Văn phòng thuế')}>
-                {procedure.taxOffice || '-'}
+                {taxOffice?.fullName || procedure.taxOffice || '-'}
               </ProDescriptions.Item>
             </>
           )}
         </ProDescriptions>
+
+        {serviceType === SERVICE_TYPE.SECOND && taxOffice && (
+          <TaxOfficeInfo office={taxOffice} style={{ marginBottom: 12 }} />
+        )}
 
         {procedure.mergedFileUrl && (
           <div style={{ textAlign: 'right', marginBottom: 8 }}>
@@ -232,6 +242,16 @@ const WorkerDetail: React.FC = () => {
 
   const byType = (serviceType: API.NenkinServiceType) =>
     procedures?.data?.find((p) => p.serviceType === serviceType);
+
+  const secondTaxOffice = byType(SERVICE_TYPE.SECOND)?.taxOffice;
+  const { data: taxOfficeList } = useFetch<API.TaxOfficeList>(
+    () => queryTaxOffices(),
+    [],
+    { ready: !!secondTaxOffice },
+  );
+  const taxOffice = taxOfficeList?.data?.find(
+    (o) => o.name === shortTaxOfficeName(secondTaxOffice),
+  );
 
   const missing = [
     ...(worker?.firstMissingFields || []),
@@ -478,6 +498,7 @@ const WorkerDetail: React.FC = () => {
         procedure={byType(SERVICE_TYPE.SECOND)}
         workerId={workerId}
         canCreate={!!checkAccess.createNenkinService}
+        taxOffice={taxOffice}
       />
     </>
   );
