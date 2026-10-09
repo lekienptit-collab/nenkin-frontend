@@ -198,6 +198,19 @@ const NenkinRequest: React.FC = () => {
       } else {
         message.success(t('Đã tạo hồ sơ thành công.'));
       }
+      if (result?.unreadableFiles?.length) {
+        message.warning(
+          tv(
+            'Một số file giấy tờ không đưa được vào bộ hồ sơ: {files}. Hãy tải lại ảnh JPG, PNG, WEBP hoặc file PDF không đặt mật khẩu.',
+            {
+              files: result.unreadableFiles
+                .map((f) => `${t(f.paper)} – ${t(f.label)} (${t(f.reason)})`)
+                .join('; '),
+            },
+          ),
+          10,
+        );
+      }
       history.push(`/workers/${payload.workerId}`);
     } catch (error) {
       showError(error, t('Tạo hồ sơ bị lỗi. Xin thử lại!'));

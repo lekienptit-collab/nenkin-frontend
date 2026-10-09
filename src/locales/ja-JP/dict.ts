@@ -456,6 +456,13 @@ const dict: Record<string, string> = {
   'Đã tạo hồ sơ thành công.': '書類を作成しました。',
   'Đã tạo hồ sơ, nhưng người lao động còn thiếu: {fields}.':
     '書類を作成しましたが、労働者の情報に不足があります：{fields}',
+  'Một số file giấy tờ không đưa được vào bộ hồ sơ: {files}. Hãy tải lại ảnh JPG, PNG, WEBP hoặc file PDF không đặt mật khẩu.':
+    '一部の書類ファイルを書類一式に含められませんでした：{files}。JPG・PNG・WEBP画像、またはパスワードなしのPDFを再アップロードしてください。',
+  'Trang hai': '2ページ目',
+  'Không đọc được nội dung file': 'ファイルの内容を読み取れません',
+  'Không tìm thấy file trên máy chủ': 'サーバーにファイルが見つかりません',
+  'File PDF có đặt mật khẩu': 'PDFにパスワードが設定されています',
+  'File PDF không có trang nào có nội dung': 'PDFに内容のあるページがありません',
   'Giấy tờ đã làm': '作成済みの書類',
   'Tên giấy tờ': '書類名',
   'Chưa có file PDF': 'PDF未作成',

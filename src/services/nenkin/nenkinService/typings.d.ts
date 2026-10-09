@@ -36,6 +36,8 @@ declare namespace API {
     /** File PDF gop ca bo giay to. */
     mergedFileUrl?: string;
     missingFields?: MissingField[];
+    /** Chi co khi vua tao/cap nhat ho so: anh da tai len nhung khong dua duoc vao PDF. */
+    unreadableFiles?: UnreadableFile[];
 
     createdById?: string;
     createdBy?: API.UserListItem;
@@ -61,6 +63,16 @@ declare namespace API {
     taxEntrustDate?: string;
     taxOffice?: string;
     resultDate1?: string;
+  };
+
+  type UnreadableFile = {
+    /** Ten giay to dinh kem, vd. "Hộ chiếu". */
+    paper: string;
+    /** Truong luu URL anh tren ho so nguoi lao dong. */
+    field: string;
+    /** Ten o anh tren form, vd. "Trang có dấu xuất cảnh". */
+    label: string;
+    reason: string;
   };
 
   type NenkinPaperTemplate = {
